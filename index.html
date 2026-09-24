@@ -17,31 +17,32 @@
  --bg:#E2D5BF;--paper:#EFE5D3;--ink:#2F2319;--mute:#7A6550;--line:#CBB797;--accent:#7A4B28;--rose:#A3432A;
  --fire:#A94E2A;--earth:#6A6632;--air:#9E762A;--water:#4A6660;
  --soil:#CDB593;--glow:rgba(122,75,40,.10);--shade:rgba(47,35,25,.45);
- --star:rgba(110,70,38,.55);--moon:rgba(122,75,40,.42);--moonglow:rgba(158,118,42,.18);
+ --star:rgba(110,70,38,.6);--starglow:rgba(158,118,42,.45);--moon:rgba(122,75,40,.42);--moonglow:rgba(158,118,42,.18);
  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .15 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
  --serif:"Fraunces",Georgia,"Times New Roman",serif;--sans:Karla,system-ui,-apple-system,"Segoe UI",sans-serif;--sym:"Noto Sans Symbols","Noto Sans Symbols 2","Segoe UI Symbol","Apple Symbols",sans-serif;
  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
  --bg:#1C1510;--paper:#271E17;--ink:#EEE1CB;--mute:#AA957B;--line:#3F3227;--accent:#D4A673;--rose:#E48A66;
  --fire:#E3936A;--earth:#B8B27A;--air:#DDB866;--water:#8FB0A6;--soil:#2D231A;--glow:rgba(212,166,115,.08);--shade:rgba(0,0,0,.6);
- --star:rgba(240,222,190,.7);--moon:rgba(238,220,186,.62);--moonglow:rgba(221,184,102,.22);}}
+ --star:rgba(246,230,200,.85);--starglow:rgba(236,205,140,.55);--moon:rgba(238,220,186,.62);--moonglow:rgba(221,184,102,.22);}}
 :root[data-theme="dark"]{color-scheme:dark;
  --bg:#1C1510;--paper:#271E17;--ink:#EEE1CB;--mute:#AA957B;--line:#3F3227;--accent:#D4A673;--rose:#E48A66;
  --fire:#E3936A;--earth:#B8B27A;--air:#DDB866;--water:#8FB0A6;--soil:#2D231A;--glow:rgba(212,166,115,.08);--shade:rgba(0,0,0,.6);
- --star:rgba(240,222,190,.7);--moon:rgba(238,220,186,.62);--moonglow:rgba(221,184,102,.22);}
+ --star:rgba(246,230,200,.85);--starglow:rgba(236,205,140,.55);--moon:rgba(238,220,186,.62);--moonglow:rgba(221,184,102,.22);}
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--grain),radial-gradient(120% 70% at 50% 0%,var(--glow),transparent 60%),var(--bg);background-color:var(--bg);color:var(--ink);font:400 16px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
 /* quiet night sky: two pinpoint star fields, a few four-point sparkles, one crescent */
-html::before,body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background-repeat:repeat}
-html::before{background-image:radial-gradient(circle 1.1px at 8% 14%,var(--star) 90%,transparent),radial-gradient(circle .9px at 27% 62%,var(--star) 90%,transparent),radial-gradient(circle 1.3px at 46% 31%,var(--star) 90%,transparent),radial-gradient(circle .8px at 63% 84%,var(--star) 90%,transparent),radial-gradient(circle 1px at 81% 22%,var(--star) 90%,transparent),radial-gradient(circle .9px at 92% 57%,var(--star) 90%,transparent);background-size:560px 560px;animation:twinkle 8s ease-in-out infinite alternate}
-body::before{background-image:radial-gradient(circle 1px at 17% 41%,var(--star) 90%,transparent),radial-gradient(circle .8px at 38% 9%,var(--star) 90%,transparent),radial-gradient(circle 1.2px at 58% 70%,var(--star) 90%,transparent),radial-gradient(circle .9px at 74% 46%,var(--star) 90%,transparent),radial-gradient(circle 1px at 89% 88%,var(--star) 90%,transparent);background-size:430px 430px;background-position:120px 60px;animation:twinkle 11s ease-in-out -5s infinite alternate}
+html::before,body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background-repeat:repeat;filter:drop-shadow(0 0 1.5px var(--starglow)) drop-shadow(0 0 4px var(--starglow))}
+html::after{filter:drop-shadow(0 0 3px var(--starglow))}
+html::before{background-image:radial-gradient(circle 1.1px at 8% 14%,var(--star) 90%,transparent),radial-gradient(circle .9px at 27% 62%,var(--star) 90%,transparent),radial-gradient(circle 1.3px at 46% 31%,var(--star) 90%,transparent),radial-gradient(circle .8px at 63% 84%,var(--star) 90%,transparent),radial-gradient(circle 1px at 81% 22%,var(--star) 90%,transparent),radial-gradient(circle .9px at 92% 57%,var(--star) 90%,transparent),radial-gradient(circle 1.2px at 35% 93%,var(--star) 90%,transparent),radial-gradient(circle 0.9px at 70% 5%,var(--star) 90%,transparent);background-size:560px 560px;animation:twinkle 8s ease-in-out infinite alternate}
+body::before{background-image:radial-gradient(circle 1px at 17% 41%,var(--star) 90%,transparent),radial-gradient(circle .8px at 38% 9%,var(--star) 90%,transparent),radial-gradient(circle 1.2px at 58% 70%,var(--star) 90%,transparent),radial-gradient(circle .9px at 74% 46%,var(--star) 90%,transparent),radial-gradient(circle 1px at 89% 88%,var(--star) 90%,transparent),radial-gradient(circle 1.1px at 6% 77%,var(--star) 90%,transparent),radial-gradient(circle 0.9px at 49% 52%,var(--star) 90%,transparent);background-size:430px 430px;background-position:120px 60px;animation:twinkle 11s ease-in-out -5s infinite alternate}
 html::after{content:"\2726";position:fixed;top:18vh;left:9vw;z-index:0;pointer-events:none;font:9px/1 var(--sym);color:var(--star);
- text-shadow:78vw 9vh 0 var(--star),64vw 58vh 0 var(--star),4vw 66vh 0 var(--star),38vw 76vh 0 var(--star);animation:sparkle 6s ease-in-out infinite alternate}
+ text-shadow:78vw 9vh 0 var(--star),64vw 58vh 0 var(--star),4vw 66vh 0 var(--star),38vw 76vh 0 var(--star),55vw 30vh 0 var(--star),22vw 40vh 0 var(--star);animation:sparkle 6s ease-in-out infinite alternate}
 body::after{content:"";position:fixed;top:calc(26px + env(safe-area-inset-top,0px));right:30px;width:30px;height:30px;border-radius:50%;z-index:0;pointer-events:none;
  box-shadow:8px -5px 0 0 var(--moon),8px -5px 22px 1px var(--moonglow);transform:rotate(-12deg)}
-@keyframes twinkle{from{opacity:.25}to{opacity:.85}}
+@keyframes twinkle{from{opacity:.3}to{opacity:1}}
 @keyframes sparkle{0%{opacity:.2}60%{opacity:.75}100%{opacity:.4}}
 @media (max-width:620px){body::after{width:22px;height:22px;top:calc(12px + env(safe-area-inset-top,0px));right:14px;box-shadow:6px -4px 0 0 var(--moon),6px -4px 16px 1px var(--moonglow)}}
 @media (prefers-reduced-motion:reduce){html::before,body::before,html::after{animation:none;opacity:.55}}
