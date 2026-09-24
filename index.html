@@ -459,7 +459,7 @@ function newRound(){
   state.qLeft=4; state.wrong=0; state.turns=[]; state.tried=[]; state.hintsUsed=[]; $("#hintChoices").hidden=true; state.done=false; state.round++;
   drawWheel(); drawTable(); renderStatus();
   $("#thread").innerHTML=""; $("#reveal").hidden=true; $("#play").hidden=false; $("#giveUp").hidden=false;
-  const rt=P[12];$("#timeNote").textContent=ut!=null?(rt&&rt!=="rec"?`Documented birth time, Rodden ${rt}. Placidus houses.`:"Recorded birth time. Placidus houses."):"Birth time unknown, set to 12:00 noon local. Houses and rising are approximate.";
+  const rt=P[12];$("#timeNote").textContent=ut!=null?(rt&&rt!=="rec"?`Documented birth time, Rodden ${rt}. Placidus houses.`:"Recorded birth time. Placidus houses."):"Some birth times aren't on record, including this one, so this chart is set for 12:00 noon local time. Houses and rising are approximate.";
   addMsg("host", sampleDead?"Questions need Claude, which isn't available in this view. You can still guess.":"Ask me up to four yes or no questions. Guess the name whenever you're ready.");
   updateControls(); $("#q").value=""; $("#g").value="";
 }
