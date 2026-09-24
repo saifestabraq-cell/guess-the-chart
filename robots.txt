@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://guess-the-chart-vittoria4.vercel.app/sitemap.xml
