@@ -71,7 +71,7 @@ Use "unsure" only when the truth is genuinely unknown or ambiguous. Use "not_yes
     if (error instanceof Anthropic.AuthenticationError) return res.status(503).json({ error: "Invalid API key" });
     if (error instanceof Anthropic.APIError) {
       console.error(`Anthropic API error ${error.status}:`, error.message);
-      return res.status(502).json({ error: "Upstream error" });
+      return res.status(502).json({ error: "Upstream error", status: error.status, detail: error.message });
     }
     console.error(error);
     return res.status(500).json({ error: "Server error" });
