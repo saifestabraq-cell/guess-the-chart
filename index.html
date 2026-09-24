@@ -30,6 +30,7 @@
  --fire:#E3936A;--earth:#B8B27A;--air:#DDB866;--water:#8FB0A6;--soil:#2D231A;--glow:rgba(212,166,115,.08);--shade:rgba(0,0,0,.6);
  --star:rgba(240,222,190,.7);--moon:rgba(238,220,186,.62);--moonglow:rgba(221,184,102,.22);}
 *,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--grain),radial-gradient(120% 70% at 50% 0%,var(--glow),transparent 60%),var(--bg);background-color:var(--bg);color:var(--ink);font:400 16px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
 /* quiet night sky: two pinpoint star fields, a few four-point sparkles, one crescent */
@@ -122,7 +123,7 @@ button.ghost:hover:not(:disabled){filter:none;color:var(--ink)}
 </style></head><body><main>
 <header><h1>Guess.The.Chart</h1><span id="roundInfo"></span></header>
 <p id="statsLine"></p>
-<div class="opts"><label><input type="checkbox" id="optDoc"> Documented birth times only</label><label><input type="checkbox" id="optTrue"> True node</label></div>
+<div class="opts" hidden><label><input type="checkbox" id="optDoc"> Documented birth times only</label><label><input type="checkbox" id="optTrue"> True node</label></div>
 <div class="wheelWrap"><svg id="wheel" viewBox="-12 -12 424 424" role="img" aria-label="Natal chart wheel"></svg></div>
 <p id="timeNote"></p>
 <details><summary>Show positions</summary><table id="posTable"></table></details>
@@ -144,6 +145,8 @@ button.ghost:hover:not(:disabled){filter:none;color:var(--ink)}
 <script>
 // Standalone-site bridge: outside Claude, route the game's yes/no questions to /api/ask.
 // The game code below is unchanged; it calls sample.json(prompt) exactly as before.
+// Chart options are hidden on this site; clear any saved choice so every visitor gets the defaults.
+try{localStorage.removeItem("whose-chart-options-v1");}catch(e){}
 if(!(window.claude&&window.claude.use)){
   window.claude={use:async name=>name!=="sample"?null:{json:async prompt=>{
     const m=prompt.match(/"""([\s\S]*)"""/);const P=state.person;
