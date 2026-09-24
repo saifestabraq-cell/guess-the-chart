@@ -115,7 +115,9 @@ button.ghost:hover:not(:disabled){filter:none;color:var(--ink)}
 #rvBig{margin-top:4px;font-family:var(--serif);font-style:italic;font-size:15px}
 .rvActions{display:flex;gap:14px;justify-content:center;align-items:center;margin-top:22px}
 .rvActions a{color:var(--accent);font-size:14px;font-weight:600;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
-.credit{text-align:center;margin:40px 0 0;font:italic 300 13px/1 var(--serif);letter-spacing:.06em;color:var(--mute);opacity:.5}
+.credit{display:flex;flex-direction:column;align-items:center;gap:5px;margin:44px 0 0;color:var(--mute);opacity:.55}
+.credit .cHead{font:600 10px/1 var(--sans);letter-spacing:.24em;text-transform:uppercase;margin-bottom:4px}
+.credit p{margin:0;font:italic 300 13px/1.3 var(--serif);letter-spacing:.04em}.credit b{font-weight:400;font-style:normal}
 @media (max-width:420px){h1{font-size:36px}#rvName{font-size:34px}.mono{width:96px;height:96px;font-size:40px}}
 </style></head><body><main>
 <header><h1>Guess.The.Chart</h1><span id="roundInfo"></span></header>
@@ -137,7 +139,7 @@ button.ghost:hover:not(:disabled){filter:none;color:var(--ink)}
  <div class="rvActions"><a id="rvSearch" target="_blank" rel="noopener">See photos</a><button id="nextBtn">Next chart</button></div>
 </section>
 <div class="foot"><button class="ghost" id="resetStats" hidden>Reset stats</button><button class="ghost" id="giveUp">Reveal this one</button></div>
-<p class="credit">made by saif</p>
+<footer class="credit"><span class="cHead">Founders</span><p><b>Saif</b> · architect</p><p><b>Vittoria</b> · astrologer</p></footer>
 </main>
 <script>
 // Standalone-site bridge: outside Claude, route the game's yes/no questions to /api/ask.
