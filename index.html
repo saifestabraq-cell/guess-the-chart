@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Guess.The.Chart</title>
+<meta name="description" content="Guess the famous person from their birth chart. Ask four yes or no questions, then name them.">
+<meta name="theme-color" content="#2F2319">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..600,100;1,9..144,300..600,100&family=Karla:wght@400;500;600;700&family=Noto+Sans+Symbols:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
+<style>
+:root{
+ /* light: sandstone ground, walnut ink, umber accent, rust, olive, ochre, lichen */
+ --bg:#E2D5BF;--paper:#EFE5D3;--ink:#2F2319;--mute:#7A6550;--line:#CBB797;--accent:#7A4B28;--rose:#A3432A;
+ --fire:#A94E2A;--earth:#6A6632;--air:#9E762A;--water:#4A6660;
+ --soil:#CDB593;--glow:rgba(122,75,40,.10);--shade:rgba(47,35,25,.45);
+ --star:rgba(110,70,38,.55);--moon:rgba(122,75,40,.42);--moonglow:rgba(158,118,42,.18);
+ --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .15 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+ --serif:"Fraunces",Georgia,"Times New Roman",serif;--sans:Karla,system-ui,-apple-system,"Segoe UI",sans-serif;--sym:"Noto Sans Symbols","Noto Sans Symbols 2","Segoe UI Symbol","Apple Symbols",sans-serif;
+ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
+ --bg:#1C1510;--paper:#271E17;--ink:#EEE1CB;--mute:#AA957B;--line:#3F3227;--accent:#D4A673;--rose:#E48A66;
+ --fire:#E3936A;--earth:#B8B27A;--air:#DDB866;--water:#8FB0A6;--soil:#2D231A;--glow:rgba(212,166,115,.08);--shade:rgba(0,0,0,.6);
+ --star:rgba(240,222,190,.7);--moon:rgba(238,220,186,.62);--moonglow:rgba(221,184,102,.22);}}
+:root[data-theme="dark"]{color-scheme:dark;
+ --bg:#1C1510;--paper:#271E17;--ink:#EEE1CB;--mute:#AA957B;--line:#3F3227;--accent:#D4A673;--rose:#E48A66;
+ --fire:#E3936A;--earth:#B8B27A;--air:#DDB866;--water:#8FB0A6;--soil:#2D231A;--glow:rgba(212,166,115,.08);--shade:rgba(0,0,0,.6);
+ --star:rgba(240,222,190,.7);--moon:rgba(238,220,186,.62);--moonglow:rgba(221,184,102,.22);}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--grain),radial-gradient(120% 70% at 50% 0%,var(--glow),transparent 60%),var(--bg);background-color:var(--bg);color:var(--ink);font:400 16px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+/* quiet night sky: two pinpoint star fields, a few four-point sparkles, one crescent */
+html::before,body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background-repeat:repeat}
+html::before{background-image:radial-gradient(circle 1.1px at 8% 14%,var(--star) 90%,transparent),radial-gradient(circle .9px at 27% 62%,var(--star) 90%,transparent),radial-gradient(circle 1.3px at 46% 31%,var(--star) 90%,transparent),radial-gradient(circle .8px at 63% 84%,var(--star) 90%,transparent),radial-gradient(circle 1px at 81% 22%,var(--star) 90%,transparent),radial-gradient(circle .9px at 92% 57%,var(--star) 90%,transparent);background-size:560px 560px;animation:twinkle 8s ease-in-out infinite alternate}
+body::before{background-image:radial-gradient(circle 1px at 17% 41%,var(--star) 90%,transparent),radial-gradient(circle .8px at 38% 9%,var(--star) 90%,transparent),radial-gradient(circle 1.2px at 58% 70%,var(--star) 90%,transparent),radial-gradient(circle .9px at 74% 46%,var(--star) 90%,transparent),radial-gradient(circle 1px at 89% 88%,var(--star) 90%,transparent);background-size:430px 430px;background-position:120px 60px;animation:twinkle 11s ease-in-out -5s infinite alternate}
+html::after{content:"\2726";position:fixed;top:18vh;left:9vw;z-index:0;pointer-events:none;font:9px/1 var(--sym);color:var(--star);
+ text-shadow:78vw 9vh 0 var(--star),64vw 58vh 0 var(--star),4vw 66vh 0 var(--star),38vw 76vh 0 var(--star);animation:sparkle 6s ease-in-out infinite alternate}
+body::after{content:"";position:fixed;top:calc(26px + env(safe-area-inset-top,0px));right:30px;width:30px;height:30px;border-radius:50%;z-index:0;pointer-events:none;
+ box-shadow:8px -5px 0 0 var(--moon),8px -5px 22px 1px var(--moonglow);transform:rotate(-12deg)}
+@keyframes twinkle{from{opacity:.25}to{opacity:.85}}
+@keyframes sparkle{0%{opacity:.2}60%{opacity:.75}100%{opacity:.4}}
+@media (max-width:620px){body::after{width:22px;height:22px;top:calc(12px + env(safe-area-inset-top,0px));right:14px;box-shadow:6px -4px 0 0 var(--moon),6px -4px 16px 1px var(--moonglow)}}
+@media (prefers-reduced-motion:reduce){html::before,body::before,html::after{animation:none;opacity:.55}}
+main{max-width:540px;margin:0 auto;padding:34px 20px 52px;position:relative;z-index:1}
+header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+h1{font:400 44px/1 var(--serif);font-variation-settings:"SOFT" 100,"opsz" 144;margin:0;letter-spacing:-.02em;text-wrap:balance}
+#roundInfo{color:var(--accent);font:600 12px var(--sans);letter-spacing:.12em;text-transform:uppercase}
+.opts{display:flex;flex-wrap:wrap;gap:6px 20px;margin:10px 0 0;font-size:13.5px;color:var(--mute)}.opts label{display:flex;align-items:center;gap:7px;cursor:pointer}.opts input{accent-color:var(--accent);width:15px;height:15px;margin:0;flex:none}
+#statsLine{margin:10px 0 0;color:var(--mute);font-size:13.5px;min-height:1.2em;font-variant-numeric:tabular-nums}
+.wheelWrap{margin:20px 0 8px;position:relative;padding:6px;border-radius:50%;background:radial-gradient(circle at 50% 50%,var(--paper) 0 58%,var(--soil) 100%);box-shadow:inset 0 0 0 1px var(--line)}
+svg#wheel{width:100%;height:auto;display:block;overflow:visible}
+.ring{fill:none;stroke:var(--ink);stroke-width:.8;opacity:.5}.ring.faint{opacity:.22}
+.tick{stroke:var(--ink);stroke-width:.6;opacity:.3}
+.sign{font:15px var(--sym);text-anchor:middle;dominant-baseline:central}
+.el0{fill:var(--fire)}.el1{fill:var(--earth)}.el2{fill:var(--air)}.el3{fill:var(--water)}
+.cusp{stroke:var(--mute);stroke-width:.9;stroke-dasharray:3 2.5;opacity:.85}.axis{stroke:var(--ink);stroke-width:1.6;opacity:.85}.houseband{fill:none;stroke:var(--earth);opacity:.07}
+.hnum{font:600 9px var(--sans);fill:var(--mute);text-anchor:middle;dominant-baseline:central}
+.axlab{font:700 10px var(--sans);fill:var(--ink);dominant-baseline:central;text-anchor:middle;letter-spacing:.06em}
+.asp{stroke-width:.9;opacity:.7}.asp.tri,.asp.sex{stroke:var(--accent)}.asp.sq,.asp.opp{stroke:var(--rose)}.asp.sex{stroke-dasharray:3 3}
+.icpt{fill:none;stroke:var(--air);stroke-width:3;stroke-linecap:round;opacity:.6}
+.ptick{stroke:var(--ink);stroke-width:1;opacity:.55}
+.pg{font:19px var(--sym);fill:var(--ink);text-anchor:middle;dominant-baseline:central}
+.pd{font:10px var(--sans);fill:var(--mute);text-anchor:middle;dominant-baseline:central;font-variant-numeric:tabular-nums}
+.planet:focus{outline:none}.planet:focus .pg{fill:var(--accent)}
+#timeNote{text-align:center;color:var(--mute);font:italic 400 14px/1.4 var(--serif);margin:6px 0 4px}
+details{margin:6px 0 24px;text-align:center}
+summary{cursor:pointer;color:var(--accent);font:600 12px var(--sans);letter-spacing:.12em;text-transform:uppercase;list-style:none;display:inline-block;padding:6px 10px;border-radius:999px}
+summary:hover{background:var(--glow)}
+summary::-webkit-details-marker{display:none}
+summary:focus-visible,button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+table{margin:10px auto 0;border-collapse:collapse;font-size:14px;text-align:left;font-variant-numeric:tabular-nums}
+td{padding:4px 12px;border-bottom:1px dotted var(--line)}td.g{font-family:var(--sym);text-align:center;font-size:15px;color:var(--accent)}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:26px 20px 28px 18px;overflow:hidden;box-shadow:0 14px 30px -22px var(--shade)}
+#thread{max-height:240px;overflow-y:auto;padding:16px 16px 8px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:85%;padding:8px 13px;border-radius:14px;font-size:15px;line-height:1.45;white-space:pre-wrap}
+.msg.host{align-self:flex-start;background:transparent;color:var(--mute);padding-left:0}
+.msg.host.ans{color:var(--ink);font:500 19px/1.2 var(--serif);padding-left:0}
+.msg.host.ans.yes{color:var(--accent)}.msg.host.ans.no{color:var(--rose)}
+.msg.host.pending{font-style:italic}
+.msg.you{align-self:flex-end;background:var(--bg);border:1px solid var(--line);border-radius:16px 16px 4px 16px}
+.msg.you.guess{border-style:dashed}
+.row{display:flex;gap:8px;padding:10px 12px 10px 16px;border-top:1px solid var(--line);align-items:center}
+input{flex:1;min-width:0;font:inherit;font-size:16px;color:var(--ink);background:transparent;border:0;padding:8px 2px}
+input::placeholder{color:var(--mute);opacity:.8}input:disabled{opacity:.55}
+button{font:600 14px var(--sans);letter-spacing:.02em;border-radius:999px;border:1px solid var(--accent);background:var(--accent);color:var(--paper);padding:8px 18px;cursor:pointer;transition:filter .15s,transform .15s}
+button:hover:not(:disabled){filter:brightness(1.08)}button:active:not(:disabled){transform:translateY(1px)}
+#guessBtn{background:var(--ink);border-color:var(--ink)}
+button:disabled{opacity:.35;cursor:default}
+button.ghost{background:transparent;color:var(--mute);border-color:transparent;font-weight:500;padding:6px 4px}
+button.ghost:hover:not(:disabled){filter:none;color:var(--ink)}
+.meter{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--mute);white-space:nowrap;font-variant-numeric:tabular-nums}
+.dot{width:8px;height:8px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--accent)}.dot.used{background:var(--line)}
+.mark{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--mute);opacity:.55}.mark.miss{background:var(--rose);border-color:var(--rose);opacity:1}
+.meters{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px 0}
+.hintRow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:6px 12px 6px 16px;border-top:1px solid var(--line)}#hintChoices:not([hidden]){display:flex;gap:6px}
+.chip:disabled{opacity:.35}.chip{background:transparent;color:var(--accent);border:1px solid var(--accent);font-weight:500;padding:5px 12px;border-radius:999px}
+.chip:hover:not(:disabled){background:var(--glow);filter:none}
+#hintBtn{color:var(--accent)}#hintBtn:disabled{color:var(--mute)}
+.msg.host.hint{color:var(--ink);font-family:var(--serif);font-style:italic}
+.foot{display:flex;justify-content:space-between;margin-top:10px}.foot #giveUp{margin-left:auto}
+#reveal{text-align:center;padding:32px 20px 28px}
+#reveal:not([hidden]) .mono,#reveal:not([hidden]) #rvName{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
+#reveal:not([hidden]) #rvName{animation-delay:.08s}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#reveal *{animation:none!important}button{transition:none}}
+#rvResult{font:600 12px var(--sans);letter-spacing:.12em;text-transform:uppercase;margin:0 0 16px}#rvResult.won{color:var(--accent)}#rvResult.lost{color:var(--rose)}
+.mono{width:120px;height:120px;border-radius:58% 42% 52% 48% / 46% 56% 44% 54%;margin:0 auto 16px;display:grid;place-items:center;font:400 48px/1 var(--serif);font-variation-settings:"SOFT" 100;color:var(--paper);background:radial-gradient(circle at 35% 30%,var(--air),var(--accent) 72%);box-shadow:0 12px 24px -14px var(--shade)}
+#rvName{font:400 42px/1.05 var(--serif);font-variation-settings:"SOFT" 100,"opsz" 144;letter-spacing:-.015em;margin:0 0 8px;text-wrap:balance}
+#rvDesc{margin:0 0 6px}#rvBorn,#rvBig{color:var(--mute);font-size:14px;margin:0}
+#rvBig{margin-top:4px;font-family:var(--serif);font-style:italic;font-size:15px}
+.rvActions{display:flex;gap:14px;justify-content:center;align-items:center;margin-top:22px}
+.rvActions a{color:var(--accent);font-size:14px;font-weight:600;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+@media (max-width:420px){h1{font-size:36px}#rvName{font-size:34px}.mono{width:96px;height:96px;font-size:40px}}
+</style></head><body><main>
+<header><h1>Guess.The.Chart</h1><span id="roundInfo"></span></header>
+<p id="statsLine"></p>
+<div class="opts"><label><input type="checkbox" id="optDoc"> Documented birth times only</label><label><input type="checkbox" id="optTrue"> True node</label></div>
+<div class="wheelWrap"><svg id="wheel" viewBox="-12 -12 424 424" role="img" aria-label="Natal chart wheel"></svg></div>
+<p id="timeNote"></p>
+<details><summary>Show positions</summary><table id="posTable"></table></details>
+<section class="panel" id="play">
+ <div class="meters"><span class="meter"><span id="qDots" style="display:flex;gap:4px"></span><span id="qLabel"></span></span><span class="meter"><span id="gLabel"></span><span id="gMarks" style="display:flex;gap:4px"></span></span></div>
+ <div id="thread" aria-live="polite"></div>
+ <div class="row" id="askForm"><input id="q" autocomplete="off" maxlength="300" aria-label="Ask a yes or no question"><button id="askBtn" type="button">Ask</button></div>
+ <div class="hintRow"><button type="button" class="ghost" id="hintBtn">Get a hint (costs 1 guess)</button><span id="hintChoices" hidden><button type="button" class="chip" data-k="field">Field</button><button type="button" class="chip" data-k="gender">Gender</button></span></div>
+ <div class="row" id="guessForm"><input id="g" autocomplete="off" maxlength="80" placeholder="Who is it?" aria-label="Guess the person"><button id="guessBtn" type="button">Guess</button></div>
+</section>
+<section class="panel" id="reveal" hidden>
+ <p id="rvResult"></p><div class="mono" id="rvMono" aria-hidden="true"></div>
+ <h2 id="rvName"></h2><p id="rvDesc"></p><p id="rvBorn"></p><p id="rvBig"></p>
+ <div class="rvActions"><a id="rvSearch" target="_blank" rel="noopener">See photos</a><button id="nextBtn">Next chart</button></div>
+</section>
+<div class="foot"><button class="ghost" id="resetStats" hidden>Reset stats</button><button class="ghost" id="giveUp">Reveal this one</button></div>
+</main>
+<script>
+// Standalone-site bridge: outside Claude, route the game's yes/no questions to /api/ask.
+// The game code below is unchanged; it calls sample.json(prompt) exactly as before.
+if(!(window.claude&&window.claude.use)){
+  window.claude={use:async name=>name!=="sample"?null:{json:async prompt=>{
+    const m=prompt.match(/"""([\s\S]*)"""/);const P=state.person;
+    const r=await fetch("/api/ask",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({name:P[0],desc:P[9],y:P[2],m:P[3],d:P[4],julian:!!P[8],place:P[10],question:m?m[1]:""})});
+    if(r.status===429)throw {code:"rate_limited"};
+    if(r.status===503)throw {code:"capability_disabled"};
+    if(!r.ok)throw {code:"error"};
+    return r.json();}}};
+}
+</script>
+<script>
+const D2R=Math.PI/180, R2D=180/Math.PI;
+const norm=a=>((a%360)+360)%360;
+function jd(y,m,d,h,julian){ if(m<=2){y-=1;m+=12;} const A=Math.floor(y/100); const B=julian?0:2-A+Math.floor(A/4);
+  return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5+h/24; }
+// JPL approximate elements, 3000BC-3000AD
+const EL={
+ me:[0.38709843,0,0.20563661,0.00002123,7.00559432,-0.00590158,252.25166724,149472.67486623,77.45771895,0.15940013,48.33961819,-0.12214182],
+ ve:[0.72332102,-0.00000026,0.00676399,-0.00005107,3.39777545,0.00043494,181.97970850,58517.81560260,131.76755713,0.05679648,76.67261496,-0.27274174],
+ ea:[1.00000018,-0.00000003,0.01673163,-0.00003661,-0.00054346,-0.01337178,100.46691572,35999.37306329,102.93005885,0.31795260,-5.11260389,-0.24123856],
+ ma:[1.52371243,0.00000097,0.09336511,0.00009149,1.85181869,-0.00724757,-4.56813164,19140.29934243,-23.91744784,0.45223625,49.71320984,-0.26852431],
+ ju:[5.20248019,-0.00002864,0.04853590,0.00018026,1.29861416,-0.00322699,34.33479152,3034.90371757,14.27495244,0.18199196,100.29282654,0.13024619],
+ sa:[9.54149883,-0.00003065,0.05550825,-0.00032044,2.49424102,0.00451969,50.07571329,1222.11494724,92.86136063,0.54179478,113.63998702,-0.25015002],
+ ur:[19.18797948,-0.00020455,0.04685740,-0.00001550,0.77298127,-0.00180155,314.20276625,428.49512595,172.43404441,0.09266985,73.96250215,0.05739699],
+ ne:[30.06952752,0.00006447,0.00895439,0.00000818,1.77005520,0.00022400,304.22289287,218.46515314,46.68158724,0.01009938,131.78635853,-0.00606302],
+ pl:[39.48686035,0.00449751,0.24885238,0.00006016,17.14104260,0.00000501,238.96535011,145.18042903,224.09702598,-0.00968827,110.30167986,-0.00809981]};
+const XT={ju:[-0.00012452,0.06064060,-0.35635438,38.35125],sa:[0.00025899,-0.13434469,0.87320147,38.35125],
+ ur:[0.00058331,-0.97731848,0.17689245,7.67025],ne:[-0.00041348,0.68346318,-0.10162547,7.67025],pl:[-0.01262724,0,0,0]};
+function helio(k,T){const e0=EL[k];const a=e0[0]+e0[1]*T,e=e0[2]+e0[3]*T,I=(e0[4]+e0[5]*T)*D2R,L=e0[6]+e0[7]*T,w=e0[8]+e0[9]*T,O=e0[10]+e0[11]*T;
+ let M=L-w; const x=XT[k]; if(x) M+=x[0]*T*T+x[1]*Math.cos(x[3]*T*D2R)+x[2]*Math.sin(x[3]*T*D2R);
+ M=norm(M+180)-180; const Mr=M*D2R; let E=Mr+e*Math.sin(Mr);
+ for(let i=0;i<30;i++){const dE=(Mr-(E-e*Math.sin(E)))/(1-e*Math.cos(E)); E+=dE; if(Math.abs(dE)<1e-12)break;}
+ const xp=a*(Math.cos(E)-e), yp=a*Math.sqrt(1-e*e)*Math.sin(E); const om=(w-O)*D2R, Or=O*D2R;
+ const co=Math.cos(om),so=Math.sin(om),cO=Math.cos(Or),sO=Math.sin(Or),cI=Math.cos(I),sI=Math.sin(I);
+ return [(co*cO-so*sO*cI)*xp+(-so*cO-co*sO*cI)*yp,(co*sO+so*cO*cI)*xp+(-so*sO+co*cO*cI)*yp,(so*sI)*xp+(co*sI)*yp];}
+const PREC=T=>1.3969713*T+0.0003086*T*T;
+function geo(k,T){const E=helio('ea',T); if(k==='su') return norm(Math.atan2(-E[1],-E[0])*R2D+PREC(T));
+ const P=helio(k,T); return norm(Math.atan2(P[1]-E[1],P[0]-E[0])*R2D+PREC(T));}
+const MT=[[0,0,1,0,6288774],[2,0,-1,0,1274027],[2,0,0,0,658314],[0,0,2,0,213618],[0,1,0,0,-185116],[0,0,0,2,-114332],[2,0,-2,0,58793],[2,-1,-1,0,57066],[2,0,1,0,53322],[2,-1,0,0,45758],[0,1,-1,0,-40923],[1,0,0,0,-34720],[0,1,1,0,-30383],[2,0,0,-2,15327],[0,0,1,2,-12528],[0,0,1,-2,10980],[4,0,-1,0,10675],[0,0,3,0,10034],[4,0,-2,0,8548],[2,1,-1,0,-7888],[2,1,0,0,-6766],[1,0,-1,0,-5163],[1,1,0,0,4987],[2,-1,1,0,4036],[2,0,2,0,3994],[4,0,0,0,3861],[2,0,-3,0,3665],[0,1,-2,0,-2689],[2,0,-1,2,-2602],[2,-1,-2,0,2390],[1,0,1,0,-2348],[2,-2,0,0,2236],[0,1,2,0,-2120],[0,2,0,0,-2069]];
+function moon(T){const Lp=218.3164477+481267.88123421*T-0.0015786*T*T+T*T*T/538841;
+ const D=297.8501921+445267.1114034*T-0.0018819*T*T+T*T*T/545868, M=357.5291092+35999.0502909*T-0.0001536*T*T,
+ Mp=134.9633964+477198.8675055*T+0.0087414*T*T+T*T*T/69699, F=93.2720950+483202.0175233*T-0.0036539*T*T;
+ const E=1-0.002516*T-0.0000074*T*T; let s=0;
+ for(const [d,m,mp,f,c] of MT){let k=c; if(Math.abs(m)===1)k*=E; if(Math.abs(m)===2)k*=E*E; s+=k*Math.sin((d*D+m*M+mp*Mp+f*F)*D2R);}
+ const A1=119.75+131.849*T, A2=53.09+479264.29*T; s+=3958*Math.sin(A1*D2R)+1962*Math.sin((Lp-F)*D2R)+318*Math.sin(A2*D2R);
+ return norm(Lp+s/1e6);}
+const node=T=>norm(125.04452-1934.136261*T+0.0020708*T*T+T*T*T/450000);
+function trueNode(T){const D=(297.8501921+445267.1114034*T)*D2R,M=(357.5291092+35999.0502909*T)*D2R,Mp=(134.9633964+477198.8675055*T)*D2R,F=(93.2720950+483202.0175233*T)*D2R;
+ return norm(node(T)-1.4979*Math.sin(2*(D-F))-0.1500*Math.sin(M)-0.1226*Math.sin(2*D)+0.1176*Math.sin(2*F)-0.0801*Math.sin(2*(Mp-F)));}
+function pos(J){const T=(J-2451545)/36525; const o={su:geo('su',T),mo:moon(T)};
+ for(const k of ['me','ve','ma','ju','sa','ur','ne','pl']) o[k]=geo(k,T); o.nn=node(T); o.tn=trueNode(T); return o;}
+function chart(J,lat,lon){const p=pos(J), p2=pos(J+0.5), p1=pos(J-0.5), out={};
+ for(const k in p){const dv=((p2[k]-p1[k]+540)%360)-180; out[k]={lon:p[k],retro:k!=='su'&&k!=='mo'&&k!=='nn'&&k!=='tn'&&dv<0};}
+ if(lat==null) return {bodies:out};
+ const T=(J-2451545)/36525; const eps=(23.439291-0.0130042*T)*D2R;
+ const gmst=norm(280.46061837+360.98564736629*(J-2451545)+0.000387933*T*T); const ramc=norm(gmst+lon); const R=ramc*D2R, ph=lat*D2R;
+ const mc=norm(Math.atan2(Math.sin(R),Math.cos(R)*Math.cos(eps))*R2D);
+ const asc=norm(Math.atan2(Math.cos(R),-(Math.sin(R)*Math.cos(eps)+Math.tan(ph)*Math.sin(eps)))*R2D);
+ const raToLon=a=>norm(Math.atan2(Math.sin(a*D2R),Math.cos(a*D2R)*Math.cos(eps))*R2D);
+ function cusp(f,above){let lam=above?raToLon(ramc+f*90):raToLon(ramc+180-f*90);
+  for(let i=0;i<50;i++){const dec=Math.asin(Math.sin(eps)*Math.sin(lam*D2R)); let x=-Math.tan(ph)*Math.tan(dec); x=Math.max(-1,Math.min(1,x)); const dsa=Math.acos(x)*R2D;
+   const ra=above?ramc+f*dsa:ramc+180-f*(180-dsa); lam=raToLon(ra);} return lam;}
+ const c=[]; c[1]=asc;c[10]=mc;c[11]=cusp(1/3,true);c[12]=cusp(2/3,true);c[2]=cusp(2/3,false);c[3]=cusp(1/3,false);
+ c[4]=norm(mc+180);c[7]=norm(asc+180);c[5]=norm(c[11]+180);c[6]=norm(c[12]+180);c[8]=norm(c[2]+180);c[9]=norm(c[3]+180);
+ return {bodies:out,asc,mc,cusps:c.slice(1)};}
+// [name, cat, y, m, d, utHour|null, lat|null, lon, julian, desc, place, aliases]
+const PEOPLE=[
+["Leonardo da Vinci","h",1452,4,15,null,43.79,10.93,1,"Renaissance painter, engineer and inventor","Vinci, Republic of Florence",["leonardo da vinci","da vinci","leonardo","davinci"]],
+["Galileo Galilei","h",1564,2,15,null,43.72,10.40,1,"Astronomer and physicist","Pisa, Duchy of Florence",["galileo","galileo galilei","galilei"]],
+["Isaac Newton","h",1642,12,25,null,52.81,-0.63,1,"Physicist and mathematician","Woolsthorpe, England",["newton","isaac newton","sir isaac newton"]],
+["George Washington","h",1732,2,22,null,38.19,-76.9,0,"First president of the United States","Westmoreland County, Virginia",["george washington","washington"]],
+["Wolfgang Amadeus Mozart","h",1756,1,27,19.13,47.80,13.04,0,"Classical composer","Salzburg",["mozart","wolfgang amadeus mozart","amadeus","wolfgang mozart"]],
+["Napoleon Bonaparte","h",1769,8,15,null,41.92,8.74,0,"French emperor and military commander","Ajaccio, Corsica",["napoleon","napoleon bonaparte","bonaparte"]],
+["Abraham Lincoln","h",1809,2,12,null,37.57,-85.74,0,"16th president of the United States","Hodgenville, Kentucky",["abraham lincoln","lincoln","abe lincoln"]],
+["Charles Darwin","h",1809,2,12,null,52.71,-2.75,0,"Naturalist behind the theory of evolution","Shrewsbury, England",["charles darwin","darwin"]],
+["Queen Victoria","h",1819,5,24,4.27,51.50,-0.19,0,"Queen of the United Kingdom for 63 years","Kensington Palace, London",["queen victoria","victoria"]],
+["Vincent van Gogh","h",1853,3,30,null,51.47,4.66,0,"Post-Impressionist painter","Zundert, Netherlands",["van gogh","vincent van gogh","vincent"]],
+["Nikola Tesla","h",1856,7,10,null,44.57,15.32,0,"Inventor and electrical engineer","Smiljan, Croatia",["tesla","nikola tesla"]],
+["Marie Curie","h",1867,11,7,null,52.23,21.01,0,"Physicist and chemist, two time Nobel laureate","Warsaw, Poland",["marie curie","curie","maria sklodowska","madame curie"]],
+["Mahatma Gandhi","h",1869,10,2,null,21.64,69.6,0,"Leader of Indian independence","Porbandar, India",["gandhi","mahatma gandhi","mohandas gandhi","mohandas karamchand gandhi"]],
+["Winston Churchill","h",1874,11,30,1.58,51.84,-1.36,0,"British wartime prime minister","Blenheim Palace, England",["churchill","winston churchill"]],
+["Albert Einstein","h",1879,3,14,10.83,48.40,9.99,0,"Physicist, theory of relativity","Ulm, Germany",["einstein","albert einstein"]],
+["Pablo Picasso","h",1881,10,25,null,36.72,-4.42,0,"Painter, co-founder of Cubism","Málaga, Spain",["picasso","pablo picasso"]],
+["Charlie Chaplin","h",1889,4,16,null,51.49,-0.1,0,"Silent film actor and director","London",["chaplin","charlie chaplin","charles chaplin"]],
+["Amelia Earhart","h",1897,7,24,null,39.56,-95.12,0,"Aviation pioneer","Atchison, Kansas",["amelia earhart","earhart","amelia"]],
+["Walt Disney","h",1901,12,5,null,41.88,-87.63,0,"Animator and founder of Disney","Chicago",["walt disney","disney"]],
+["Salvador Dalí","h",1904,5,11,null,42.27,2.96,0,"Surrealist painter","Figueres, Spain",["dali","salvador dali"]],
+["Frida Kahlo","h",1907,7,6,null,19.35,-99.16,0,"Painter","Coyoacán, Mexico City",["frida kahlo","frida","kahlo"]],
+["Mother Teresa","h",1910,8,26,null,42.0,21.43,0,"Catholic nun and missionary","Skopje",["mother teresa","teresa","saint teresa"]],
+["John F. Kennedy","h",1917,5,29,20,42.33,-71.12,0,"35th president of the United States","Brookline, Massachusetts",["jfk","kennedy","john f kennedy","john kennedy","john fitzgerald kennedy"]],
+["Gamal Abdel Nasser","h",1918,1,15,null,31.2,29.92,0,"Second president of Egypt","Alexandria, Egypt",["nasser","gamal abdel nasser","abdel nasser","gamal nasser"]],
+["Nelson Mandela","h",1918,7,18,null,-31.95,28.52,0,"South African president and anti apartheid leader","Mvezo, South Africa",["mandela","nelson mandela","madiba"]],
+["Queen Elizabeth II","h",1926,4,21,null,51.51,-0.14,0,"Queen of the United Kingdom for 70 years","Mayfair, London",["queen elizabeth","queen elizabeth ii","elizabeth ii","elizabeth","queen elizabeth 2","elizabeth 2"]],
+["Marilyn Monroe","h",1926,6,1,17.5,34.05,-118.24,0,"Actress and cultural icon","Los Angeles",["marilyn monroe","marilyn","monroe","norma jeane"]],
+["Martin Luther King Jr.","h",1929,1,15,18,33.75,-84.39,0,"Civil rights leader","Atlanta",["mlk","martin luther king","martin luther king jr","king","dr king"]],
+["Audrey Hepburn","h",1929,5,4,null,50.83,4.37,0,"Actress and humanitarian","Ixelles, Belgium",["audrey hepburn","hepburn","audrey"]],
+["Anne Frank","h",1929,6,12,null,50.11,8.68,0,"Diarist of the Holocaust","Frankfurt, Germany",["anne frank","frank"]],
+["Elvis Presley","h",1935,1,8,10.58,34.26,-88.70,0,"The King of Rock and Roll","Tupelo, Mississippi",["elvis","elvis presley","presley"]],
+["John Lennon","h",1940,10,9,17.5,53.41,-2.98,0,"Singer and songwriter, The Beatles","Liverpool, England",["john lennon","lennon"]],
+["Pelé","h",1940,10,23,null,-21.69,-45.25,0,"Football legend","Três Corações, Brazil",["pele","edson arantes do nascimento"]],
+["Bruce Lee","h",1940,11,27,null,37.77,-122.42,0,"Martial artist and actor","San Francisco",["bruce lee","lee"]],
+["Stephen Hawking","h",1942,1,8,null,51.75,-1.26,0,"Theoretical physicist","Oxford, England",["stephen hawking","hawking"]],
+["Muhammad Ali","h",1942,1,18,0.58,38.25,-85.76,0,"Heavyweight boxing champion","Louisville, Kentucky",["muhammad ali","ali","cassius clay","mohammed ali","mohamed ali"]],
+["Donald Trump","h",1946,6,14,14.9,40.71,-73.80,0,"45th and 47th president of the United States","Queens, New York",["trump","donald trump"]],
+["Freddie Mercury","h",1946,9,5,null,-6.16,39.19,0,"Lead singer of Queen","Stone Town, Zanzibar",["freddie mercury","freddie","mercury"]],
+["Steve Jobs","h",1955,2,25,3.25,37.77,-122.42,0,"Co-founder of Apple","San Francisco",["steve jobs","jobs"]],
+["Bill Gates","h",1955,10,28,null,47.61,-122.33,0,"Co-founder of Microsoft","Seattle",["bill gates","gates"]],
+["Michael Jackson","h",1958,8,29,null,41.59,-87.35,0,"The King of Pop","Gary, Indiana",["michael jackson","mj","jackson"]],
+["Princess Diana","h",1961,7,1,18.75,52.83,0.50,0,"Princess of Wales","Sandringham, England",["princess diana","diana","lady di","lady diana","diana spencer"]],
+["Barack Obama","h",1961,8,5,5.4,21.31,-157.86,0,"44th president of the United States","Honolulu, Hawaii",["obama","barack obama"]],
+["Elon Musk","h",1971,6,28,null,-25.75,28.19,0,"Founder of SpaceX, CEO of Tesla","Pretoria, South Africa",["elon musk","musk","elon"]],
+["Augustus","h",-62,9,23,null,41.90,12.50,1,"First Roman emperor","Rome",["augustus","caesar augustus","octavian","octavius","augustus caesar"]],
+["Nicolaus Copernicus","h",1473,2,19,null,53.01,18.60,1,"Astronomer who put the Sun at the center","Toruń, Poland",["copernicus","nicolaus copernicus","nicholas copernicus"]],
+["Michelangelo","h",1475,3,6,null,43.64,11.99,1,"Renaissance sculptor and painter, Sistine Chapel","Caprese, Republic of Florence",["michelangelo","michelangelo buonarroti"]],
+["Martin Luther","h",1483,11,10,null,51.53,11.55,1,"Leader of the Protestant Reformation","Eisleben, Saxony",["martin luther","luther"]],
+["Henry VIII","h",1491,6,28,null,51.48,0.0,1,"King of England, broke with Rome","Greenwich, England",["henry viii","henry 8","henry the eighth","king henry viii","king henry"]],
+["John Calvin","h",1509,7,10,null,49.58,3.00,1,"Protestant reformer","Noyon, France",["john calvin","calvin"]],
+["Elizabeth I","h",1533,9,7,null,51.48,0.0,1,"Queen of England, the Virgin Queen","Greenwich, England",["elizabeth i","queen elizabeth i","elizabeth 1","queen elizabeth 1","elizabeth the first"]],
+["Johannes Kepler","h",1571,12,27,null,48.75,8.87,1,"Astronomer, laws of planetary motion","Weil der Stadt, Germany",["kepler","johannes kepler"]],
+["Rembrandt","h",1606,7,15,null,52.16,4.49,0,"Dutch Golden Age painter","Leiden, Dutch Republic",["rembrandt","rembrandt van rijn"]],
+["Louis XIV","h",1638,9,5,null,48.90,2.09,0,"King of France, the Sun King","Saint-Germain-en-Laye, France",["louis xiv","louis 14","sun king","the sun king","louis the fourteenth"]],
+["Peter the Great","h",1672,5,30,null,55.75,37.62,1,"Tsar who modernized Russia","Moscow",["peter the great","peter i","tsar peter"]],
+["Johann Sebastian Bach","h",1685,3,21,null,50.98,10.32,1,"Baroque composer","Eisenach, Germany",["bach","johann sebastian bach","js bach"]],
+["Voltaire","h",1694,11,21,null,48.86,2.35,0,"Enlightenment writer and philosopher","Paris",["voltaire"]],
+["Benjamin Franklin","h",1706,1,17,null,42.36,-71.06,0,"Founding Father, inventor and diplomat","Boston",["benjamin franklin","ben franklin","franklin"]],
+["Jean-Jacques Rousseau","h",1712,6,28,null,46.20,6.14,0,"Enlightenment philosopher","Geneva",["rousseau","jean jacques rousseau"]],
+["Immanuel Kant","h",1724,4,22,null,54.71,20.51,0,"Philosopher","Königsberg, Prussia",["kant","immanuel kant"]],
+["Catherine the Great","h",1729,5,2,null,53.43,14.55,0,"Empress of Russia","Stettin, Prussia",["catherine the great","catherine ii","catherine"]],
+["Thomas Jefferson","h",1743,4,13,null,38.01,-78.43,0,"Third US president, author of the Declaration of Independence","Shadwell, Virginia",["thomas jefferson","jefferson"]],
+["Simón Bolívar","h",1783,7,24,null,10.49,-66.88,0,"Liberator of South America","Caracas",["bolivar","simon bolivar"]],
+["Charles Dickens","h",1812,2,7,null,50.80,-1.09,0,"Novelist","Portsmouth, England",["dickens","charles dickens"]],
+["Karl Marx","h",1818,5,5,null,49.75,6.64,0,"Philosopher and economist, The Communist Manifesto","Trier, Prussia",["karl marx","marx"]],
+["Florence Nightingale","h",1820,5,12,null,43.77,11.26,0,"Founder of modern nursing","Florence, Italy",["florence nightingale","nightingale"]],
+["Louis Pasteur","h",1822,12,27,null,47.09,5.49,0,"Chemist and microbiologist","Dole, France",["pasteur","louis pasteur"]],
+["Leo Tolstoy","h",1828,8,28,null,54.07,37.52,1,"Novelist, War and Peace","Yasnaya Polyana, Russia",["tolstoy","leo tolstoy"]],
+["Mark Twain","h",1835,11,30,null,39.49,-91.79,0,"Writer and humorist","Florida, Missouri",["mark twain","twain","samuel clemens"]],
+["Friedrich Nietzsche","h",1844,10,15,null,51.24,12.12,0,"Philosopher","Röcken, Prussia",["nietzsche","friedrich nietzsche"]],
+["Thomas Edison","h",1847,2,11,null,41.30,-82.60,0,"Inventor of the phonograph and practical light bulb","Milan, Ohio",["edison","thomas edison"]],
+["Alexander Graham Bell","h",1847,3,3,null,55.95,-3.19,0,"Inventor of the telephone","Edinburgh, Scotland",["alexander graham bell","graham bell","bell"]],
+["Sigmund Freud","h",1856,5,6,17.28,49.64,18.14,0,"Founder of psychoanalysis","Příbor, Moravia",["freud","sigmund freud"]],
+["Henry Ford","h",1863,7,30,null,42.32,-83.18,0,"Founder of Ford Motor Company","Dearborn, Michigan",["henry ford","ford"]],
+["Sun Yat-sen","h",1866,11,12,null,22.53,113.50,0,"Founding father of the Republic of China","Cuiheng, China",["sun yat sen","sun yatsen"]],
+["Vladimir Lenin","h",1870,4,10,null,54.32,48.40,1,"Leader of the Russian Revolution","Simbirsk, Russia",["lenin","vladimir lenin"]],
+["Orville Wright","h",1871,8,19,null,39.76,-84.19,0,"Aviation pioneer, first powered flight","Dayton, Ohio",["orville wright","wright","wright brothers","orville"]],
+["Joseph Stalin","h",1878,12,6,null,41.98,44.11,1,"Leader of the Soviet Union","Gori, Georgia",["stalin","joseph stalin"]],
+["Franklin D. Roosevelt","h",1882,1,30,null,41.78,-73.93,0,"32nd US president","Hyde Park, New York",["fdr","franklin roosevelt","franklin d roosevelt","roosevelt","franklin delano roosevelt"]],
+["Adolf Hitler","h",1889,4,20,17.63,48.26,13.03,0,"Dictator of Nazi Germany","Braunau am Inn, Austria",["hitler","adolf hitler"]],
+["Charles de Gaulle","h",1890,11,22,null,50.63,3.06,0,"French general and president","Lille, France",["de gaulle","charles de gaulle"]],
+["Mao Zedong","h",1893,12,26,null,27.92,112.53,0,"Founder of the People's Republic of China","Shaoshan, China",["mao","mao zedong","mao tse tung","chairman mao"]],
+["Ronald Reagan","h",1911,2,6,null,41.63,-89.79,0,"40th US president","Tampico, Illinois",["reagan","ronald reagan"]],
+["Alan Turing","h",1912,6,23,null,51.53,-0.19,0,"Father of computer science, Enigma codebreaker","Maida Vale, London",["turing","alan turing"]],
+["Rosa Parks","h",1913,2,4,null,32.42,-85.69,0,"Civil rights activist","Tuskegee, Alabama",["rosa parks","parks"]],
+["Pope John Paul II","h",1920,5,18,null,49.88,19.49,0,"Pope from 1978 to 2005","Wadowice, Poland",["john paul ii","pope john paul ii","john paul 2","pope john paul","karol wojtyla"]],
+["Malcolm X","h",1925,5,19,null,41.26,-95.94,0,"Civil rights leader","Omaha, Nebraska",["malcolm x","malcolm","el hajj malik el shabazz"]],
+["Margaret Thatcher","h",1925,10,13,9.0,52.91,-0.64,0,"British prime minister, the Iron Lady","Grantham, England",["thatcher","margaret thatcher","iron lady"]],
+["Fidel Castro","h",1926,8,13,null,20.68,-75.80,0,"Leader of the Cuban Revolution","Birán, Cuba",["castro","fidel castro","fidel"]],
+["Che Guevara","h",1928,6,14,null,-32.94,-60.64,0,"Marxist revolutionary","Rosario, Argentina",["che","che guevara","guevara","ernesto guevara"]],
+["Neil Armstrong","h",1930,8,5,null,40.57,-84.19,0,"First person to walk on the Moon","Wapakoneta, Ohio",["neil armstrong","armstrong"]],
+["Mikhail Gorbachev","h",1931,3,2,null,45.95,41.90,0,"Last leader of the Soviet Union","Privolnoye, Russia",["gorbachev","mikhail gorbachev"]],
+["Yuri Gagarin","h",1934,3,9,null,55.60,35.00,0,"First human in space","Klushino, Russia",["gagarin","yuri gagarin"]],
+["14th Dalai Lama","h",1935,7,6,null,36.50,101.90,0,"Spiritual leader of Tibetan Buddhism","Taktser, Amdo",["dalai lama","the dalai lama","tenzin gyatso"]],
+["Oprah Winfrey","c",1954,1,29,null,33.05,-89.583,0,"Talk show host and media mogul","Kosciusko, Mississippi",["oprah","oprah winfrey"]],
+["Denzel Washington","c",1954,12,28,null,40.917,-73.833,0,"Actor","Mount Vernon, New York",["denzel","denzel washington"]],
+["Tom Hanks","c",1956,7,9,null,37.98,-122.03,0,"Actor","Concord, California",["tom hanks","hanks"]],
+["Madonna","c",1958,8,16,null,43.6,-83.883,0,"Singer, the Queen of Pop","Bay City, Michigan",["madonna"]],
+["Tom Cruise","c",1962,7,3,null,43.05,-76.15,0,"Actor","Syracuse, New York",["tom cruise","cruise"]],
+["Michael Jordan","c",1963,2,17,null,40.633,-73.933,0,"Basketball legend","Brooklyn, New York",["michael jordan","jordan"]],
+["Johnny Depp","c",1963,6,9,null,37.77,-87.11,0,"Actor","Owensboro, Kentucky",["johnny depp","depp"]],
+["Brad Pitt","c",1963,12,18,null,35.33,-96.93,0,"Actor","Shawnee, Oklahoma",["brad pitt","pitt"]],
+["Keanu Reeves","c",1964,9,2,null,33.89,35.50,0,"Actor","Beirut, Lebanon",["keanu","keanu reeves","reeves"]],
+["Robert Downey Jr.","c",1965,4,4,null,40.767,-73.983,0,"Actor","Manhattan, New York",["robert downey jr","robert downey","rdj","downey"]],
+["Nicole Kidman","c",1967,6,20,null,21.31,-157.86,0,"Actor","Honolulu, Hawaii",["nicole kidman","kidman"]],
+["Julia Roberts","c",1967,10,28,null,33.75,-84.383,0,"Actor","Atlanta, Georgia",["julia roberts","roberts"]],
+["Will Smith","c",1968,9,25,null,39.95,-75.17,0,"Actor and rapper","Philadelphia",["will smith"]],
+["Jennifer Aniston","c",1969,2,11,null,34.05,-118.25,0,"Actor","Los Angeles",["jennifer aniston","aniston"]],
+["Jennifer Lopez","c",1969,7,24,null,40.84,-73.87,0,"Singer and actor","The Bronx, New York",["jennifer lopez","jlo","j lo","lopez"]],
+["Tupac Shakur","c",1971,6,16,null,40.767,-73.967,0,"Rapper","Manhattan, New York",["tupac","2pac","tupac shakur","pac"]],
+["Dwayne Johnson","c",1972,5,2,null,37.733,-122.15,0,"Actor and former wrestler","San Leandro, California",["the rock","rock","dwayne johnson","dwayne the rock johnson"]],
+["Eminem","c",1972,10,17,null,39.77,-94.85,0,"Rapper","St. Joseph, Missouri",["eminem","marshall mathers","slim shady"]],
+["Leonardo DiCaprio","c",1974,11,11,null,34.05,-118.25,0,"Actor","Los Angeles",["dicaprio","leonardo dicaprio","leo dicaprio","leo"]],
+["Angelina Jolie","c",1975,6,4,null,34.096,-118.294,0,"Actor","Los Angeles",["angelina jolie","jolie","angelina"]],
+["Ryan Reynolds","c",1976,10,23,null,49.28,-123.12,0,"Actor","Vancouver, Canada",["ryan reynolds","reynolds"]],
+["Shakira","c",1977,2,2,null,10.983,-74.8,0,"Singer","Barranquilla, Colombia",["shakira"]],
+["Kanye West","c",1977,6,8,null,33.75,-84.39,0,"Rapper and producer","Atlanta",["kanye","kanye west","ye"]],
+["Kobe Bryant","c",1978,8,23,null,39.95,-75.17,0,"Basketball legend","Philadelphia",["kobe","kobe bryant"]],
+["Kim Kardashian","c",1980,10,21,null,34.05,-118.25,0,"Media personality and businesswoman","Los Angeles",["kim kardashian","kardashian","kim k"]],
+["Beyoncé","c",1981,9,4,null,29.767,-95.367,0,"Singer","Houston, Texas",["beyonce","beyonce knowles","queen b"]],
+["Serena Williams","c",1981,9,26,null,43.417,-83.95,0,"Tennis champion","Saginaw, Michigan",["serena","serena williams"]],
+["Britney Spears","c",1981,12,2,null,31.25,-90.45,0,"Pop singer","McComb, Mississippi",["britney","britney spears","spears"]],
+["Scarlett Johansson","c",1984,11,22,null,40.71,-73.97,0,"Actor","New York City",["scarlett johansson","johansson","scarlett"]],
+["Cristiano Ronaldo","c",1985,2,5,null,32.633,-16.9,0,"Football star","Funchal, Madeira",["ronaldo","cristiano ronaldo","cristiano","cr7"]],
+["Lady Gaga","c",1986,3,28,null,40.78,-73.97,0,"Singer and actor","Manhattan, New York",["lady gaga","gaga"]],
+["Drake","c",1986,10,24,null,43.65,-79.383,0,"Rapper","Toronto, Canada",["drake","aubrey graham"]],
+["Lionel Messi","c",1987,6,24,null,-32.94,-60.64,0,"Football star","Rosario, Argentina",["messi","lionel messi","leo messi"]],
+["Rihanna","c",1988,2,20,null,13.1,-59.60,0,"Singer and businesswoman","Saint Michael, Barbados",["rihanna","riri"]],
+["Adele","c",1988,5,5,null,51.6,-0.07,0,"Singer","Tottenham, London",["adele"]],
+["Taylor Swift","c",1989,12,13,null,40.34,-75.95,0,"Singer songwriter","West Reading, Pennsylvania",["taylor swift","swift"]],
+["Ariana Grande","c",1993,6,26,null,26.367,-80.083,0,"Singer and actor","Boca Raton, Florida",["ariana grande","ariana"]],
+["Justin Bieber","c",1994,3,1,null,42.98,-81.25,0,"Singer","London, Ontario",["justin bieber","bieber"]],
+["Zendaya","c",1996,9,1,null,37.9,-122.067,0,"Actor","Walnut Creek, California",["zendaya"]]
+];
+// Birth times verified against Astrotheme (Rodden ratings) Sept 2026; Ascendants cross-checked to within 0.2 deg.
+const TIMED={ // name: [y,m,d,utHour,rating]
+"Leonardo da Vinci":[1452,4,14,20.938,"AA"],"George Washington":[1732,2,22,15.129,"AA"],"Abraham Lincoln":[1809,2,12,12.616,"B"],
+"Karl Marx":[1818,5,5,1.557,"AA"],"Friedrich Nietzsche":[1844,10,15,9.192,"B"],"Vincent van Gogh":[1853,3,30,10.689,"AA"],
+"Nikola Tesla":[1856,7,10,-1.021,"B"],"Pablo Picasso":[1881,10,25,23.545,"AA"],"Frida Kahlo":[1907,7,6,15.111,"AA"],
+"Tom Hanks":[1956,7,9,18.283,"AA"],"Brad Pitt":[1963,12,18,12.517,"A"],"Johnny Depp":[1963,6,9,13.733,"AA"],"Audrey Hepburn":[1929,5,4,2.0,"AA"],"Lionel Messi":[1987,6,24,23.5,"AA"],
+// Batch 1 (celebrities), Sept 2026: times traced to origin via Astro-Databank source notes, cross-checked on Astrotheme, Astro-Seek, Astro-Charts, AstroSage; Ascendants recomputed within 1'.
+"Oprah Winfrey":[1954,1,29,10.5,"A"],"Denzel Washington":[1954,12,28,5.15,"AA"],"Madonna":[1958,8,16,12.083,"AA"],"Michael Jordan":[1963,2,17,18.667,"AA"],"Robert Downey Jr.":[1965,4,4,18.167,"A"],"Julia Roberts":[1967,10,28,4.267,"AA"],"Jennifer Aniston":[1969,2,11,30.367,"AA"],"Tupac Shakur":[1971,6,16,16.25,"B"],"Dwayne Johnson":[1972,5,2,25.033,"AA"],"Leonardo DiCaprio":[1974,11,11,10.783,"AA"],"Angelina Jolie":[1975,6,4,16.15,"AA"],"Shakira":[1977,2,2,14.5,"B"],"Kim Kardashian":[1980,10,21,17.767,"AA"],"Beyoncé":[1981,9,4,26.783,"AA"],"Serena Williams":[1981,9,26,24.467,"AA"],"Britney Spears":[1981,12,2,7.5,"A"],"Cristiano Ronaldo":[1985,2,5,5.417,"AA (Astrotheme; ADB C)"],"Drake":[1986,10,24,6.517,"AA"],"Ariana Grande":[1993,6,26,25.267,"A"],"Zendaya":[1996,9,1,25.017,"AA"]};
+for(const p of PEOPLE){const t=TIMED[p[0]];if(t){p[2]=t[0];p[3]=t[1];p[4]=t[2];p[5]=t[3];p[12]=t[4];}else if(p[5]!=null)p[12]="rec";}
+PEOPLE.push(
+["Kurt Cobain","c",1967,2,20,27.633,46.98,-123.82,0,"Nirvana frontman","Aberdeen, Washington",["kurt cobain","cobain","kurt"],"AA"],
+["Elizabeth Taylor","h",1932,2,27,2.5,51.51,-0.13,0,"Actress, star of Cleopatra","London",["elizabeth taylor","liz taylor"],"AA"],
+["Frank Sinatra","h",1915,12,12,8.0,40.74,-74.03,0,"Singer and actor, Ol' Blue Eyes","Hoboken, New Jersey",["frank sinatra","sinatra"],"A"],
+["Grace Kelly","h",1929,11,12,10.517,39.95,-75.17,0,"Actress and Princess of Monaco","Philadelphia",["grace kelly","princess grace","kelly"],"AA"],
+["Marlon Brando","h",1924,4,3,29.0,41.26,-95.94,0,"Actor, The Godfather","Omaha, Nebraska",["marlon brando","brando"],"AA"],
+["Clint Eastwood","h",1930,5,31,25.583,37.77,-122.42,0,"Actor and director","San Francisco",["clint eastwood","eastwood"],"AA"],
+["Jack Nicholson","h",1937,4,22,16.0,40.21,-74.03,0,"Actor","Neptune City, New Jersey",["jack nicholson","nicholson"],"A"],
+["Paul McCartney","h",1942,6,18,12.0,53.41,-2.98,0,"Singer and songwriter, The Beatles","Liverpool, England",["paul mccartney","mccartney"],"A"],
+["David Bowie","h",1947,1,8,9.0,51.46,-0.12,0,"Singer, Ziggy Stardust","Brixton, London",["david bowie","bowie"],"A"],
+["Bill Clinton","h",1946,8,19,14.85,33.67,-93.59,0,"42nd US president","Hope, Arkansas",["bill clinton","clinton"],"A"],
+["Richard Nixon","h",1913,1,9,29.583,33.89,-117.82,0,"37th US president","Yorba Linda, California",["richard nixon","nixon"],"AA"],
+["Prince William","c",1982,6,21,20.05,51.52,-0.17,0,"Prince of Wales","Paddington, London",["prince william","william"],"AA"],
+["Sylvester Stallone","h",1946,7,6,23.333,40.71,-74.01,0,"Actor, Rocky and Rambo","New York City",["sylvester stallone","stallone","sly stallone"],"A"],
+["Coco Chanel","h",1883,8,19,16.005,47.26,-0.08,0,"Fashion designer, founder of Chanel","Saumur, France",["coco chanel","chanel","gabrielle chanel"],"AA"],
+["Jim Morrison","h",1943,12,8,15.917,28.08,-80.61,0,"Lead singer of The Doors","Melbourne, Florida",["jim morrison","morrison"],"AA"],
+["Jim Carrey","c",1962,1,17,7.5,44.05,-79.46,0,"Actor and comedian","Newmarket, Ontario",["jim carrey","carrey"],"A"],
+["Robert De Niro","h",1943,8,17,7.0,40.68,-73.94,0,"Actor","New York City",["robert de niro","de niro","deniro"],"A"],
+["Sean Penn","c",1960,8,17,22.283,34.18,-118.31,0,"Actor and director","Burbank, California",["sean penn","penn"],"AA"],
+["Mick Jagger","h",1943,7,26,0.5,51.44,0.22,0,"Lead singer of the Rolling Stones","Dartford, England",["mick jagger","jagger"],"A"],
+["Bruce Springsteen","h",1949,9,23,26.833,40.26,-74.27,0,"Singer, The Boss","Freehold, New Jersey",["bruce springsteen","springsteen","the boss"],"AA"],
+["Amy Winehouse","c",1983,9,14,21.417,51.65,-0.08,0,"Singer, Back to Black","Enfield, London",["amy winehouse","winehouse","amy"],"A"],
+["Prince Harry","c",1984,9,15,15.333,51.52,-0.17,0,"Duke of Sussex","Paddington, London",["prince harry","harry"],"A"],
+["Barbra Streisand","h",1942,4,24,9.133,40.65,-73.95,0,"Singer and actress","Brooklyn, New York",["barbra streisand","streisand","barbra"],"AA"],
+["Stevie Nicks","h",1948,5,26,10.7,33.45,-112.07,0,"Singer, Fleetwood Mac","Phoenix, Arizona",["stevie nicks","nicks"],"AA"],
+["Whitney Houston","h",1963,8,9,24.917,40.74,-74.17,0,"Singer, I Will Always Love You","Newark, New Jersey",["whitney houston","whitney","houston"],"AA"],
+["Joe Biden","h",1942,11,20,12.5,41.41,-75.66,0,"46th US president","Scranton, Pennsylvania",["joe biden","biden"],"A"]
+);
+
+const WOMEN=new Set(["Queen Victoria","Marie Curie","Amelia Earhart","Frida Kahlo","Mother Teresa","Queen Elizabeth II","Marilyn Monroe","Audrey Hepburn","Anne Frank","Princess Diana","Elizabeth I","Catherine the Great","Florence Nightingale","Rosa Parks","Margaret Thatcher","Oprah Winfrey","Madonna","Nicole Kidman","Julia Roberts","Jennifer Aniston","Jennifer Lopez","Angelina Jolie","Shakira","Kim Kardashian","Beyoncé","Serena Williams","Britney Spears","Scarlett Johansson","Lady Gaga","Rihanna","Adele","Taylor Swift","Ariana Grande","Zendaya","Elizabeth Taylor","Grace Kelly","Coco Chanel","Amy Winehouse","Barbra Streisand","Stevie Nicks","Whitney Houston"]);
+const FIELD_RULES=[
+ [/princess|prince of|duke of|queen of|king of|emperor|empress|tsar|sun king|virgin queen|roman emperor/i,"royalty"],
+ [/pope|nun|missionary|reformation|reformer|dalai|spiritual/i,"religion"],
+ [/president|prime minister|leader|dictator|revolution|founding father|liberator|civil rights|activist|apartheid|general and president|chairman|independence|soviet/i,"politics and leadership"],
+ [/moon|space|aviation|flight/i,"exploration and flight"],
+ [/physicist|astronomer|inventor|scientist|chemist|naturalist|mathematic|computer|engineer|nursing|psychoanalysis|microbiolog|telephone|phonograph|relativity/i,"science and invention"],
+ [/football|basketball|boxing|tennis|martial|wrestler|champion/i,"sports"],
+ [/singer|rapper|composer|musician|beatles|rolling stones|the doors|nirvana|fleetwood|queen of pop|king of pop|rock and roll|pop/i,"music"],
+ [/actor|actress|filmmaker|director|comedian|film|animator/i,"film and television"],
+ [/painter|sculptor|designer|surreal|cubism|artist/i,"art and design"],
+ [/writer|novelist|philosopher|poet|diarist|humorist|economist/i,"writing and philosophy"],
+ [/founder|ceo|mogul|personality|businesswoman|talk show|motor/i,"business and media"]];
+const FIELD_OVERRIDE={"Leonardo da Vinci":"art and design","Napoleon Bonaparte":"politics and leadership","Elvis Presley":"music","Michael Jackson":"music","Madonna":"music","Grace Kelly":"film and television","Will Smith":"film and television","Mao Zedong":"politics and leadership","Elon Musk":"business and media","Dwayne Johnson":"film and television","Bruce Lee":"film and television"};
+const fieldOf=(d,n)=>{if(FIELD_OVERRIDE[n])return FIELD_OVERRIDE[n];for(const [r,f] of FIELD_RULES)if(r.test(d))return f;return "public life";};
+const CONT_OVERRIDE={"Vladimir Lenin":"Europe","Joseph Stalin":"Europe","Mikhail Gorbachev":"Europe","Cristiano Ronaldo":"Europe","Keanu Reeves":"Asia","Rihanna":"North America (Caribbean)","Fidel Castro":"North America (Caribbean)","Gamal Abdel Nasser":"Africa","Freddie Mercury":"Africa"};
+function continentOf(p){if(CONT_OVERRIDE[p[0]])return CONT_OVERRIDE[p[0]];const la=p[6],lo=p[7];
+ if(lo<-30)return (la<12.5&&lo>-82)||la<0?"South America":"North America";
+ if(la<0&&lo>10)return "Africa";
+ if(lo>45||(lo>34&&la<42))return "Asia";
+ if(la<35&&lo>-20)return "Africa";
+ return "Europe";}
+function centuryOf(y){if(y<=0){const b=1-y;const c=Math.ceil(b/100);return `${c}${ord(c)} century BC`;}const c=Math.ceil(y/100);return `${c}${ord(c)} century`;}
+function ord(n){const s=["th","st","nd","rd"],v=n%100;return s[(v-20)%10]||s[v]||s[0];}
+
+const CHIRON={"Leonardo da Vinci":[79.46,0],"Galileo Galilei":[288.576,0],"Isaac Newton":[68.48,1],"George Washington":[30.258,0],"Wolfgang Amadeus Mozart":[284.278,0],"Napoleon Bonaparte":[353.717,1],"Abraham Lincoln":[312.104,0],"Charles Darwin":[312.103,0],"Queen Victoria":[358.772,0],"Vincent van Gogh":[282.956,0],"Nikola Tesla":[303.881,1],"Marie Curie":[352.296,1],"Mahatma Gandhi":[1.33,1],"Winston Churchill":[18.233,1],"Albert Einstein":[35.451,0],"Pablo Picasso":[50.898,1],"Charlie Chaplin":[96.268,0],"Amelia Earhart":[217.179,0],"Walt Disney":[274.397,0],"Salvador Dalí":[299.725,1],"Frida Kahlo":[316.977,1],"Mother Teresa":[329.877,1],"John F. Kennedy":[359.245,0],"Gamal Abdel Nasser":[355.914,0],"Nelson Mandela":[3.234,1],"Queen Elizabeth II":[27.921,0],"Marilyn Monroe":[30.27,0],"Martin Luther King Jr.":[35.288,0],"Audrey Hepburn":[39.925,0],"Anne Frank":[42.315,0],"Elvis Presley":[65.127,1],"John Lennon":[120.425,0],"Pelé":[121.017,0],"Bruce Lee":[121.155,1],"Stephen Hawking":[132.939,1],"Muhammad Ali":[132.295,1],"Donald Trump":[194.672,0],"Freddie Mercury":[200.63,0],"Steve Jobs":[302.179,0],"Bill Gates":[300.154,0],"Michael Jackson":[319.162,1],"Princess Diana":[336.345,1],"Barack Obama":[335.188,1],"Elon Musk":[13.628,0],"Nicolaus Copernicus":[316.955,0],"Michelangelo":[326.779,0],"Martin Luther":[356.649,1],"Henry VIII":[32.074,0],"John Calvin":[195.554,0],"Elizabeth I":[7.46,1],"Johannes Kepler":[327.726,0],"Rembrandt":[218.799,0],"Louis XIV":[48.845,1],"Peter the Great":[351.17,0],"Johann Sebastian Bach":[36.261,0],"Voltaire":[106.234,1],"Benjamin Franklin":[266.641,0],"Jean-Jacques Rousseau":[314.611,1],"Immanuel Kant":[4.029,0],"Catherine the Great":[22.65,0],"Thomas Jefferson":[101.189,0],"Simón Bolívar":[50.188,0],"Charles Dickens":[325.998,0],"Karl Marx":[354.455,0],"Florence Nightingale":[1.89,0],"Louis Pasteur":[5.939,0],"Leo Tolstoy":[32.957,1],"Mark Twain":[65.708,1],"Friedrich Nietzsche":[163.13,0],"Thomas Edison":[204.445,1],"Alexander Graham Bell":[203.903,1],"Sigmund Freud":[305.736,0],"Henry Ford":[339.998,1],"Sun Yat-sen":[348.315,1],"Vladimir Lenin":[5.183,0],"Orville Wright":[10.788,1],"Joseph Stalin":[34.067,1],"Franklin D. Roosevelt":[47.486,0],"Adolf Hitler":[96.509,0],"Charles de Gaulle":[123.913,1],"Mao Zedong":[170.298,0],"Ronald Reagan":[331.157,0],"Alan Turing":[340.88,1],"Rosa Parks":[338.944,0],"Pope John Paul II":[9.026,0],"Malcolm X":[26.047,0],"Margaret Thatcher":[26.199,1],"Fidel Castro":[32.009,1],"Che Guevara":[38.456,0],"Neil Armstrong":[48.617,0],"Mikhail Gorbachev":[44.601,0],"Yuri Gagarin":[59.29,0],"14th Dalai Lama":[72.881,0],"Oprah Winfrey":[293.458,0],"Denzel Washington":[297.27,0],"Tom Hanks":[310.076,1],"Madonna":[319.822,1],"Tom Cruise":[340.597,1],"Michael Jordan":[339.614,0],"Johnny Depp":[344.774,0],"Brad Pitt":[340.477,0],"Keanu Reeves":[346.645,1],"Robert Downey Jr.":[349.818,0],"Nicole Kidman":[359.678,0],"Julia Roberts":[355.885,1],"Will Smith":[0.912,1],"Jennifer Aniston":[0.497,0],"Jennifer Lopez":[6.701,1],"Tupac Shakur":[13.382,0],"Dwayne Johnson":[14.92,0],"Eminem":[14.573,1],"Leonardo DiCaprio":[20.956,1],"Angelina Jolie":[26.727,0],"Ryan Reynolds":[29.481,1],"Shakira":[27.582,0],"Kanye West":[34.141,0],"Kobe Bryant":[39.693,1],"Kim Kardashian":[46.655,1],"Beyoncé":[52.824,1],"Serena Williams":[52.414,1],"Britney Spears":[49.356,1],"Scarlett Johansson":[66.222,1],"Cristiano Ronaldo":[63.289,1],"Lady Gaga":[70.294,0],"Drake":[81.024,1],"Lionel Messi":[83.178,0],"Rihanna":[83.213,1],"Adele":[85.979,0],"Taylor Swift":[105.145,1],"Ariana Grande":[141.463,0],"Justin Bieber":[155.984,1],"Zendaya":[194.667,0],"Kurt Cobain":[354.201,0],"Elizabeth Taylor":[48.987,0],"Frank Sinatra":[347.978,0],"Grace Kelly":[41.492,1],"Marlon Brando":[19.983,0],"Clint Eastwood":[45.765,0],"Jack Nicholson":[79.733,0],"Paul McCartney":[132.002,0],"David Bowie":[216.632,0],"Bill Clinton":[198.664,0],"Richard Nixon":[337.562,0],"Prince William":[55.289,0],"Sylvester Stallone":[195.216,0],"Coco Chanel":[63.211,0],"Jim Morrison":[165.125,0],"Jim Carrey":[333.8,0],"Robert De Niro":[152.67,0],"Sean Penn":[329.929,1],"Mick Jagger":[149.721,0],"Bruce Springsteen":[244.696,0],"Amy Winehouse":[62.926,1],"Prince Harry":[68.573,1],"Barbra Streisand":[128.247,0],"Stevie Nicks":[230.284,1],"Whitney Houston":[343.628,1],"Joe Biden":[148.705,0]};
+const SIGNS=["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+const VS="\uFE0E";
+const SG=["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"].map(s=>s+VS);
+const BODY={su:["☉","Sun"],mo:["☽","Moon"],me:["☿","Mercury"],ve:["♀","Venus"],ma:["♂","Mars"],ju:["♃","Jupiter"],sa:["♄","Saturn"],ur:["♅","Uranus"],ne:["♆","Neptune"],pl:["♇","Pluto"],ch:["⚷","Chiron"],nn:["☊","North Node"]};
+const ASP=[[0,"conj",8],[180,"opp",8],[120,"tri",7],[90,"sq",6],[60,"sex",5]];
+const yr=(y)=>y<=0?`${1-y} BC`:String(y);
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const $=s=>document.querySelector(s);
+const deg=l=>{const d=Math.floor(l%30),m=Math.floor((l%1)*60);return `${d}°${String(m).padStart(2,"0")}′`;};
+const normTxt=s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim().replace(/^(is it |it s |its |it is )/,"").replace(/ jr$/,"");
+
+let state={queue:[],round:0,solved:0,person:null,chart:null,qLeft:4,wrong:0,turns:[],done:false};
+let sample=null, sampleDead=false;
+const SKEY="whose-chart-stats-v1";
+function loadStats(){try{const s=JSON.parse(localStorage.getItem(SKEY)||"null");if(s&&typeof s.played==="number")return s;}catch(e){}return {played:0,solved:0,streak:0,best:0,qOnSolves:0};}
+function saveStats(){try{localStorage.setItem(SKEY,JSON.stringify(stats));}catch(e){}}
+let stats=loadStats();
+const OKEY="whose-chart-options-v1";
+let opts=(()=>{try{return Object.assign({documented:false,trueNode:false},JSON.parse(localStorage.getItem(OKEY)||"{}"));}catch(e){return {documented:false,trueNode:false};}})();
+function saveOpts(){try{localStorage.setItem(OKEY,JSON.stringify(opts));}catch(e){}}
+function prepChart(){const b=state.chart.bodies;const raw=state.rawNodes;b.nn={lon:opts.trueNode?raw.tn:raw.nn,retro:false};
+  const c=CHIRON[state.person[0]];if(c)b.ch={lon:c[0],retro:!!c[1]};else delete b.ch;}
+function renderStats(){
+  $("#roundInfo").textContent=stats.streak?`Streak ${stats.streak}`:(stats.played?"New streak":"");
+  if(!stats.played){$("#statsLine").textContent="";$("#resetStats").hidden=true;return;}
+  const avg=stats.solved?(stats.qOnSolves/stats.solved).toFixed(1):null;
+  $("#statsLine").textContent=`Solved ${stats.solved} of ${stats.played}. Best streak ${stats.best}.`+(avg!==null?` Average ${avg} questions per solve.`:"");
+  $("#resetStats").hidden=false;}
+
+function pickNext(){
+  if(!state.queue.length){state.queue=PEOPLE.map((_,i)=>i);}
+  const ok=i=>!opts.documented||PEOPLE[i][5]!=null;
+  if(!state.queue.some(ok))state.queue=PEOPLE.map((_,i)=>i);
+  const pool=c=>state.queue.filter(i=>PEOPLE[i][1]===c&&ok(i));
+  let cat=Math.random()<0.6?"h":"c"; if(!pool(cat).length) cat=cat==="h"?"c":"h";
+  const p=pool(cat); const i=p[Math.floor(Math.random()*p.length)];
+  state.queue=state.queue.filter(x=>x!==i); return PEOPLE[i];
+}
+
+function newRound(){
+  const P=pickNext(); const [name,cat,y,m,d,ut,lat,lon,jul]=P;
+  const hour=ut!=null?ut:12-lon/15;
+  state.person=P; state.chart=chart(jd(y,m,d,hour,!!jul),lat,lon); state.rawNodes={nn:state.chart.bodies.nn.lon,tn:state.chart.bodies.tn.lon}; delete state.chart.bodies.tn; prepChart();
+  state.qLeft=4; state.wrong=0; state.turns=[]; state.tried=[]; state.hintsUsed=[]; $("#hintChoices").hidden=true; state.done=false; state.round++;
+  drawWheel(); drawTable(); renderStatus();
+  $("#thread").innerHTML=""; $("#reveal").hidden=true; $("#play").hidden=false; $("#giveUp").hidden=false;
+  const rt=P[12];$("#timeNote").textContent=ut!=null?(rt&&rt!=="rec"?`Documented birth time, Rodden ${rt}. Placidus houses.`:"Recorded birth time. Placidus houses."):"Birth time unknown, set to 12:00 noon local. Houses and rising are approximate.";
+  addMsg("host", sampleDead?"Questions need Claude, which isn't available in this view. You can still guess.":"Ask me up to four yes or no questions. Guess the name whenever you're ready.");
+  updateControls(); $("#q").value=""; $("#g").value="";
+}
+
+function renderStatus(){
+  $("#qDots").innerHTML=[0,1,2,3].map(i=>`<span class="dot ${i<4-state.qLeft?"used":""}"></span>`).join("");
+  $("#gMarks").innerHTML=[0,1,2,3].map(i=>`<span class="mark ${i<state.wrong?"miss":""}"></span>`).join("");
+  $("#qLabel").textContent=state.qLeft===1?"1 question left":`${state.qLeft} questions left`;
+  $("#gLabel").textContent=state.wrong===0?"4 guesses":`${4-state.wrong} of 4 guesses left`;
+}
+function updateHint(){const b=$("#hintBtn");const used=state.hintsUsed||[];const left=["field","gender"].filter(k=>!used.includes(k));
+  const off=state.done||!left.length||state.wrong>=3;b.disabled=off;
+  b.textContent=!left.length?"Hints used":state.wrong>=3?"No hints on your last guess":"Get a hint (costs 1 guess)";
+  document.querySelectorAll("#hintChoices button").forEach(x=>{x.disabled=used.includes(x.dataset.k);});if(off)$("#hintChoices").hidden=true;}
+function useHint(kind){state.hintsUsed=state.hintsUsed||[];if(state.done||state.hintsUsed.includes(kind)||state.wrong>=3)return;const P=state.person;
+  const txt=kind==="field"?`Best known in ${fieldOf(P[9],P[0])}.`:(WOMEN.has(P[0])?"This person is a woman.":"This person is a man.");
+  state.hintsUsed.push(kind);state.wrong++;$("#hintChoices").hidden=true;addMsg("host",`Hint: ${txt}`,"hint");renderStatus();
+  if(state.wrong>=4){lose();return;}updateHint();}
+function updateControls(){updateHint();
+  const off=state.done||state.qLeft<=0||sampleDead||!sample;
+  $("#q").disabled=off; $("#askBtn").disabled=off;
+  $("#q").placeholder=sampleDead||!sample?(sampleDead?"Questions unavailable here":"Connecting…"):state.qLeft<=0?"No questions left, make a guess":"Was this person an actor?";
+}
+function addMsg(who,text,cls=""){const el=document.createElement("div");el.className=`msg ${who} ${cls}`;el.textContent=text;$("#thread").append(el);$("#thread").scrollTop=1e9;return el;}
+
+// ---- wheel ----
+function interceptedSigns(C){if(!C.cusps)return [];const out=[];
+  for(let s=0;s<12;s++){if(!C.cusps.some(c=>Math.floor(c/30)===s))out.push(s);}return out;}
+function drawWheel(){
+  const C=state.chart, cx=200, cy=200, R0=192, R1=162, RP=146, RA=92, RH=110;
+  const rot=C.asc!=null?C.asc:0;
+  const P=(lon,r)=>{const t=(lon-rot)*Math.PI/180;return [cx-r*Math.cos(t),cy+r*Math.sin(t)];};
+  let s=`<circle cx="${cx}" cy="${cy}" r="${R0}" class="ring"/><circle cx="${cx}" cy="${cy}" r="${R1}" class="ring"/><circle cx="${cx}" cy="${cy}" r="${RA}" class="ring faint"/>`;
+  if(C.cusps) s+=`<circle cx="${cx}" cy="${cy}" r="${(RA+RH)/2}" class="houseband" style="stroke-width:${RH-RA}px"/><circle cx="${cx}" cy="${cy}" r="${RH}" class="ring faint"/>`;
+  for(let i=0;i<12;i++){const [x1,y1]=P(i*30,R1),[x2,y2]=P(i*30,R0);s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="ring"/>`;
+    const [gx,gy]=P(i*30+15,(R0+R1)/2); s+=`<text x="${gx}" y="${gy}" class="sign el${i%4}">${SG[i]}</text>`;
+    for(let k=5;k<30;k+=5){const [a,b]=P(i*30+k,R1),[c,d]=P(i*30+k,R1+(k%10?4:6));s+=`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" class="tick"/>`;}}
+  for(const sgn of interceptedSigns(C)){let pts=[];for(let l=sgn*30+1;l<=sgn*30+29.01;l+=1){const [x,y]=P(l,R1+4);pts.push(x.toFixed(1)+","+y.toFixed(1));}
+    s+=`<polyline points="${pts.join(" ")}" class="icpt"><title>${SIGNS[sgn]} is intercepted</title></polyline>`;}
+  if(C.cusps){
+    C.cusps.forEach((c,i)=>{const ang=i%3===0;const [x1,y1]=P(c,RA),[x2,y2]=P(c,ang?R0+6:R1);
+      s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${ang?"axis":"cusp"}"/>`;
+      const nx=C.cusps[(i+1)%12]; const mid=c+(((nx-c)+360)%360)/2; const [hx,hy]=P(mid,(RA+RH)/2); s+=`<text x="${hx}" y="${hy}" class="hnum">${i+1}</text>`;});
+    const [ax,ay]=P(C.asc,R0+10);s+=`<text x="${ax}" y="${ay}" class="axlab" text-anchor="end">AC</text>`;
+    const [mx,my]=P(C.mc,R0+14);s+=`<text x="${mx}" y="${my}" class="axlab">MC</text>`;}
+  // aspects
+  const keys=Object.keys(BODY).filter(k=>C.bodies[k]); let asp="";
+  for(let i=0;i<keys.length;i++)for(let j=i+1;j<keys.length;j++){const a=keys[i],b=keys[j]; if(a==="nn"||b==="nn"||a==="ch"||b==="ch")continue;
+    let d=Math.abs(C.bodies[a].lon-C.bodies[b].lon); if(d>180)d=360-d;
+    for(const [ang,kind,orb] of ASP){if(kind!=="conj"&&Math.abs(d-ang)<=orb){const [x1,y1]=P(C.bodies[a].lon,RA),[x2,y2]=P(C.bodies[b].lon,RA);asp+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="asp ${kind}"/>`;}}}
+  s+=asp;
+  // planets with spreading
+  const list=keys.map(k=>({k,lon:C.bodies[k].lon,pl:C.bodies[k].lon})).sort((a,b)=>a.lon-b.lon);
+  {const G=11,n=list.length;let bi=0,bg=-1;for(let i=0;i<n;i++){const g=((list[(i+1)%n].lon-list[i].lon)+360)%360;if(g>bg){bg=g;bi=i;}}
+   const seq=[];for(let j=1;j<=n;j++)seq.push(list[(bi+j)%n]);let base=seq[0].lon;seq.forEach(o=>{o.u=o.lon;while(o.u<base)o.u+=360;});
+   let cl=seq.map(o=>({items:[o]}));const pos=k=>{const m=k.items.reduce((s,o)=>s+o.u,0)/k.items.length;return k.items.map((o,j)=>m+(j-(k.items.length-1)/2)*G);};
+   let changed=true;while(changed){changed=false;for(let i=0;i<cl.length-1;i++){const pa=pos(cl[i]),pb=pos(cl[i+1]);if(pb[0]-pa[pa.length-1]<G){cl.splice(i,2,{items:cl[i].items.concat(cl[i+1].items)});changed=true;break;}}}
+   cl.forEach(k=>{const ps=pos(k);k.items.forEach((o,j)=>o.pl=ps[j]);});}
+  for(const o of list){const [tx,ty]=P(o.lon,R1),[t2x,t2y]=P(o.lon,R1-7);s+=`<line x1="${tx}" y1="${ty}" x2="${t2x}" y2="${t2y}" class="ptick"/>`;
+    const [lx,ly]=P(o.pl,RP);const [dx,dy]=P(o.pl,RP-20);const b=C.bodies[o.k];
+    s+=`<g class="planet" tabindex="0"><title>${BODY[o.k][1]} ${deg(b.lon)} ${SIGNS[Math.floor(b.lon/30)]}${b.retro?", retrograde":""}</title><text x="${lx}" y="${ly}" class="pg">${BODY[o.k][0]+VS}</text><text x="${dx}" y="${dy}" class="pd">${Math.floor(b.lon%30)}${b.retro?"℞":""}</text></g>`;}
+  $("#wheel").innerHTML=s;
+}
+function drawTable(){
+  const C=state.chart; let h="";
+  for(const k in BODY){const b=C.bodies[k];if(!b)continue;h+=`<tr><td class="g">${BODY[k][0]+VS}</td><td>${k==="nn"?(opts.trueNode?"North Node (true)":"North Node (mean)"):BODY[k][1]}</td><td>${deg(b.lon)} ${SIGNS[Math.floor(b.lon/30)]}${b.retro?" ℞":""}</td></tr>`;}
+  if(C.asc!=null){h+=`<tr><td class="g">AC</td><td>Ascendant</td><td>${deg(C.asc)} ${SIGNS[Math.floor(C.asc/30)]}</td></tr><tr><td class="g">MC</td><td>Midheaven</td><td>${deg(C.mc)} ${SIGNS[Math.floor(C.mc/30)]}</td></tr>`;}
+  const ic=interceptedSigns(C);
+  if(ic.length)h+=`<tr><td class="g">↔</td><td>Intercepted</td><td>${ic.map(i=>SIGNS[i]).join(", ")}</td></tr>`;
+  $("#posTable").innerHTML=h;
+}
+
+// ---- questions ----
+async function ask(){
+  const q=$("#q").value.trim(); if(!q||state.done||state.qLeft<=0||!sample)return;
+  $("#q").value=""; addMsg("you",q); const pend=addMsg("host","Thinking…","pending");
+  $("#askBtn").disabled=true;$("#q").disabled=true;
+  const [name,,y,m,d,,,,jul,desc,place]=state.person;
+  const prompt=`You are the host of a guessing game. The secret person is ${name} (${desc}), born ${MONTHS[m-1]} ${d}, ${yr(y)}${jul?" (Julian calendar)":""} in ${place}.
+The player is trying to identify them by asking yes or no questions. Answer from well known, verifiable facts about this person. Never reveal the name, never give hints beyond the answer.
+Player's question: """${q.slice(0,300)}"""
+Reply with only JSON: {"answer":"yes"|"no"|"unsure"|"not_yes_no","named":true|false}
+Use "unsure" only when the truth is genuinely unknown or ambiguous. Use "not_yes_no" when the question cannot be answered with yes or no. Set "named" true only if the question directly names this exact secret person as its guess (e.g. "Is it ${name.split(" ").slice(-1)[0]}?"), otherwise false.`;
+  try{
+    const r=await sample.json(prompt,{modelTier:"quick"});
+    const ans=String(r&&r.answer||"").toLowerCase();
+    if(r&&r.named===true){pend.remove();state.qLeft--;renderStatus();win();return;}
+    if(ans==="not_yes_no"){pend.className="msg host";pend.textContent="That one needs a yes or no question. It didn't count.";}
+    else if(ans!=="yes"&&ans!=="no"){pend.className="msg host";pend.textContent="Hard to say for this person. That one didn't count, try another angle.";}
+    else{state.qLeft--; pend.className=`msg host ans ${ans}`;
+      pend.textContent=ans==="yes"?"Yes.":"No.";
+      if(state.qLeft===0&&!state.done)addMsg("host","That was your last question. Make your guesses.");}
+  }catch(e){
+    const c=e&&e.code;
+    if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(c)){sampleDead=true;pend.className="msg host";pend.textContent="Questions need permission to use Claude. Guessing still works.";}
+    else if(c==="rate_limited"){pend.className="msg host";pend.textContent="Too many questions too fast. Wait a moment and ask again; that one didn't count.";}
+    else if(c==="cancelled"){pend.remove();}
+    else{pend.className="msg host";pend.textContent="The answer didn't come through. Ask again; that one didn't count.";}
+  }
+  renderStatus(); updateControls(); if(!$("#q").disabled)$("#q").focus();
+}
+
+// ---- guesses ----
+function guess(){
+  const raw=$("#g").value.trim(); if(!raw||state.done)return; $("#g").value="";
+  const g=normTxt(raw); const ok=state.person[11].some(a=>normTxt(a)===g)||normTxt(state.person[0])===g;
+  if(ok){win();return;}
+  addMsg("you",`Guess: ${raw}`,"guess");
+  if(state.tried.includes(g)){addMsg("host",`You already tried ${raw}. That one didn't count.`);return;}
+  state.tried.push(g); state.wrong++; renderStatus(); updateHint(); 
+  if(state.wrong>=4){lose();} else addMsg("host",`Not ${raw}.`,"ans no");
+}
+function win(){finish(true);}
+function lose(){finish(false);}
+function finish(won){
+  if(state.done)return;
+  state.done=true;
+  stats.played++; if(won){stats.solved++;stats.streak++;stats.best=Math.max(stats.best,stats.streak);stats.qOnSolves+=4-state.qLeft;}else stats.streak=0;
+  saveStats(); renderStats(); updateControls(); renderStatus();
+  const [name,,y,m,d,ut,,,jul,desc,place]=state.person; const C=state.chart;
+  $("#rvResult").textContent=won?(state.wrong===0&&state.qLeft===4?"Straight from the chart. Impressive.":"You got it."):"Out of guesses. It was";
+  $("#rvResult").className=won?"won":"lost";
+  $("#rvMono").textContent=name.replace(/[^A-Za-zÀ-ÿ ]/g,"").split(" ").filter(w=>/^[A-ZÀ-Þ]/.test(w)).map(w=>w[0]).slice(0,2).join("");
+  $("#rvName").textContent=name; $("#rvDesc").textContent=desc;
+  $("#rvBorn").textContent=`Born ${MONTHS[m-1]} ${d}, ${yr(y)}${jul?" (Julian calendar)":""}, ${place}. ${ut!=null?(state.person[12]&&state.person[12]!=="rec"?`Birth time rated ${state.person[12]}.`:"Recorded birth time."):"Time unknown, noon chart."}`;
+  const s=k=>SIGNS[Math.floor(C.bodies[k].lon/30)];
+  $("#rvBig").textContent=`Sun in ${s("su")}, Moon in ${s("mo")}`+(C.asc!=null?`, ${SIGNS[Math.floor(C.asc/30)]} rising`:"");
+  $("#rvSearch").href="https://www.google.com/search?tbm=isch&q="+encodeURIComponent(name);
+  $("#play").hidden=true; $("#reveal").hidden=false; $("#giveUp").hidden=true; $("#nextBtn").focus();
+
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  $("#askBtn").addEventListener("click",ask);
+  $("#guessBtn").addEventListener("click",guess);
+  $("#q").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.isComposing){e.preventDefault();ask();}});
+  $("#g").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.isComposing){e.preventDefault();guess();}});
+  $("#nextBtn").addEventListener("click",newRound);
+  $("#hintBtn").addEventListener("click",()=>{const c=$("#hintChoices");c.hidden=!c.hidden;});
+  document.querySelectorAll("#hintChoices button").forEach(b=>b.addEventListener("click",()=>useHint(b.dataset.k)));
+  $("#giveUp").addEventListener("click",()=>{if(!state.done)lose();});
+  $("#resetStats").addEventListener("click",()=>{if(!confirm("Reset your solved count and streaks?"))return;stats={played:0,solved:0,streak:0,best:0,qOnSolves:0};saveStats();renderStats();});
+  renderStats();
+  $("#optDoc").checked=opts.documented;$("#optTrue").checked=opts.trueNode;
+  $("#optDoc").addEventListener("change",e=>{opts.documented=e.target.checked;saveOpts();if(opts.documented&&state.person&&state.person[5]==null&&!state.done)newRound();});
+  $("#optTrue").addEventListener("change",e=>{opts.trueNode=e.target.checked;saveOpts();if(state.chart){prepChart();drawWheel();drawTable();}});
+  newRound();
+  (async()=>{try{sample=window.claude&&window.claude.use?await window.claude.use("sample"):null;}catch(e){sample=null;}
+    if(!sample){sampleDead=true;$("#thread").firstChild&&($("#thread").firstChild.textContent="Questions need Claude, which isn't available in this view. You can still guess.");}
+    updateControls();})();
+});
+</script></body></html>

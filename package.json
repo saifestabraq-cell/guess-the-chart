@@ -1,0 +1,9 @@
+{
+  "name": "guess-the-chart",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.128.0"
+  }
+}
