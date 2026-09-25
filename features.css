@@ -1,0 +1,56 @@
+/* Styles for features.js: tutorial, score, Vittoria's reading, stats panel, Rodden explainer. */
+
+/* Rodden explainer, under the birth-time note */
+.rodden{margin:0 auto 2px;text-align:center;max-width:420px}
+.rodden summary{font:500 12.5px var(--sans);letter-spacing:.02em;text-transform:none;color:var(--mute);padding:2px 8px;text-decoration:underline dotted;text-underline-offset:3px}
+.rodden dl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:10px 0 6px;text-align:left;font-size:13.5px}
+.rodden dt{font:700 12px var(--sans);letter-spacing:.06em;color:var(--accent);padding-top:2px}
+.rodden dd{margin:0;color:var(--ink)}
+.rodden p{margin:0;font-size:12.5px;color:var(--mute);text-align:left}
+
+/* Tutorial */
+.tut{margin:14px 0 0;padding:14px 16px 12px;background:var(--paper);border:1px solid var(--accent);border-radius:20px 16px 22px 14px;box-shadow:0 14px 30px -22px var(--shade);position:relative;z-index:2}
+.tut .tutStep{font:600 11px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.tut p{margin:6px 0 10px;font-size:15px;line-height:1.45}
+.tutBtns{display:flex;justify-content:flex-end;gap:8px}
+.tutFocus{box-shadow:0 0 0 2px var(--accent),0 0 22px 2px var(--glow)!important;border-radius:14px;position:relative;z-index:1}
+.wheelWrap.tutFocus{border-radius:50%}
+@media (prefers-reduced-motion:no-preference){.tutFocus{transition:box-shadow .3s}}
+
+/* Reveal: score, breakdown, reading, new achievements */
+.rvExtras{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:16px}
+.rvScore{display:flex;align-items:baseline;gap:8px}
+.rvScoreNum{font:400 54px/1 var(--serif);font-variation-settings:"SOFT" 100,"opsz" 144;color:var(--accent);font-variant-numeric:tabular-nums}
+.rvScoreLab{font:600 11px var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+.rvBreak{margin:0;font-size:13px;color:var(--mute)}
+.vNote{margin:14px auto 2px;max-width:400px;padding:14px 18px;border:1px solid var(--line);border-radius:18px 14px 20px 12px;background:var(--bg)}
+.vNote figcaption{font:600 10.5px var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.vNote blockquote{margin:0;font:italic 400 17px/1.45 var(--serif);color:var(--ink);text-wrap:pretty}
+.achNew{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:8px}
+.achChip{font:600 12px var(--sans);color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:4px 11px;background:var(--glow)}
+.rvActions{flex-wrap:wrap}
+
+/* Your stats & achievements */
+.you{margin:18px 0 0;text-align:left}
+.you>summary{display:block;text-align:center}
+.youBody{margin-top:12px;padding:16px;background:var(--paper);border:1px solid var(--line);border-radius:22px 18px 24px 16px}
+.youEmpty,.youLine{margin:0 0 8px;font-size:14.5px}
+.youLine{font-family:var(--serif);font-style:italic;font-size:16px}
+.youNums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;text-align:center}
+.youNums b{display:block;font:400 28px/1.1 var(--serif);color:var(--accent);font-variant-numeric:tabular-nums}
+.youNums span{font-size:12px;color:var(--mute)}
+.signGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:12px 0 16px}
+.signCell{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border:1px solid var(--line);border-radius:12px;font-size:12px;font-variant-numeric:tabular-nums}
+.signCell.none{opacity:.45}
+.signCell .sg{font:16px var(--sym)}
+.signCell .el0{color:var(--fire)}.signCell .el1{color:var(--earth)}.signCell .el2{color:var(--air)}.signCell .el3{color:var(--water)}
+.youBody h3{margin:0 0 8px;font:600 11px var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+.achList{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.achList li{display:flex;flex-direction:column;padding:8px 12px;border:1px dashed var(--line);border-radius:12px;opacity:.55}
+.achList li.got{border-style:solid;border-color:var(--accent);opacity:1}
+.achList b{font-weight:600;font-size:14px}
+.achList li.got b{color:var(--accent)}
+.achList span{font-size:12.5px;color:var(--mute)}
+@media (max-width:420px){.signGrid{grid-template-columns:repeat(4,1fr)}}
+
+#howBtn{margin-right:auto}
