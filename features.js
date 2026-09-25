@@ -21,7 +21,7 @@
   const ACH = [
     { id: "first", name: "First light", desc: "Solve your first chart" },
     { id: "pure", name: "Straight from the chart", desc: "Solve without asking a question" },
-    { id: "perfect", name: "Perfect reading", desc: "Score 100: no questions, hints, wrong guesses or positions" },
+    { id: "perfect", name: "Perfect reading", desc: "Score 100: no questions, hints, wrong guesses or planet positions" },
     { id: "streak5", name: "On a roll", desc: "Solve 5 charts in a row" },
     { id: "ten", name: "Ten charts read", desc: "Solve 10 charts" },
     { id: "old", name: "Old soul", desc: "Solve someone born before 1700" },
@@ -138,7 +138,7 @@
     sc.append(el("span", { class: "rvScoreNum" }, String(r.score)), el("span", { class: "rvScoreLab" }, "score"));
     rvBox.append(sc);
     const parts = [plural(r.q, "question"), plural(r.g, "wrong guess").replace("guesss", "guesses"), plural(r.h, "hint")];
-    if (r.pos) parts.push("positions shown");
+    if (r.pos) parts.push("planet positions shown");
     rvBox.append(el("p", { class: "rvBreak" }, r.won ? parts.join(" · ") : "Revealed charts score 0"));
     const note = (window.READINGS || {})[state.person[0]];
     if (note) {
