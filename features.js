@@ -1,5 +1,5 @@
 // Guess.The.Chart extras: saved rounds, first-round tutorial, scoring, personal stats,
-// achievements, Vittoria's readings, reveal card image and the Rodden rating explainer.
+// achievements, chart readings, reveal card image and the Rodden rating explainer.
 // Loaded after the game script; it wraps a few game functions instead of editing them.
 (() => {
   const RKEY = "gtc-round-v1", PKEY = "gtc-profile-v1", TKEY = "gtc-tutorial-v1";
@@ -138,10 +138,10 @@
     const parts = [plural(r.q, "question"), plural(r.g, "wrong guess").replace("guesss", "guesses"), plural(r.h, "hint")];
     if (r.pos) parts.push("positions shown");
     rvBox.append(el("p", { class: "rvBreak" }, r.won ? parts.join(" · ") : "Revealed charts score 0"));
-    const note = (window.VITTORIA_NOTES || {})[state.person[0]];
+    const note = (window.READINGS || {})[state.person[0]];
     if (note) {
       const q = el("figure", { class: "vNote" });
-      q.append(el("figcaption", {}, "Vittoria's reading"), el("blockquote", {}, note));
+      q.append(el("figcaption", {}, "Reading"), el("blockquote", {}, note));
       rvBox.append(q);
     }
     if (r.fresh.length) {
@@ -279,7 +279,10 @@
     x.fillStyle = star; for (let i = 0; i < 70; i++) { x.globalAlpha = .25 + rnd() * .6; x.beginPath(); x.arc(rnd() * W, rnd() * H, .8 + rnd() * 1.6, 0, 7); x.fill(); }
     x.globalAlpha = 1; x.textAlign = "center";
     x.fillStyle = mute; x.font = "600 24px Karla, sans-serif"; x.letterSpacing = "6px"; x.fillText("GUESS.THE.CHART", W / 2, 84); x.letterSpacing = "0px";
-    const WS = 760, wx = (W - WS) / 2, wy = 120;
+    const note = (window.READINGS || {})[state.person[0]];
+    x.font = "italic 400 27px Fraunces, Georgia, serif";
+    const long = note && wrap(x, note, W - 180).length > 5;
+    const WS = !note ? 760 : long ? 600 : 660, wx = (W - WS) / 2, wy = 120;
     const g = x.createRadialGradient(W / 2, wy + WS / 2, WS * .2, W / 2, wy + WS / 2, WS / 2);
     g.addColorStop(0, paper); g.addColorStop(1, soil); x.fillStyle = g; x.beginPath(); x.arc(W / 2, wy + WS / 2, WS / 2, 0, 7); x.fill();
     const img = new Image(); img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(wheelSvg(WS - 40));
@@ -290,12 +293,13 @@
     x.fillStyle = ink; x.fillText(name, W / 2, y); y += 52;
     x.fillStyle = mute; x.font = "400 30px Karla, sans-serif"; x.fillText(state.person[9], W / 2, y); y += 48;
     x.font = "italic 400 30px Fraunces, Georgia, serif"; x.fillText($("#rvBig").textContent, W / 2, y); y += 56;
-    const note = (window.VITTORIA_NOTES || {})[name];
     if (note) {
-      x.fillStyle = ink; x.font = "italic 400 30px Fraunces, Georgia, serif";
-      const lines = wrap(x, "“" + note + "”", W - 200).slice(0, 3);
-      for (const l of lines) { x.fillText(l, W / 2, y); y += 40; }
-      x.fillStyle = mute; x.font = "600 20px Karla, sans-serif"; x.letterSpacing = "4px"; x.fillText("VITTORIA, ASTROLOGER", W / 2, y + 4); x.letterSpacing = "0px"; y += 44;
+      const size = long ? 25 : 27, lh = long ? 33 : 36;
+      x.fillStyle = ink; x.font = `italic 400 ${size}px Fraunces, Georgia, serif`;
+      let lines = wrap(x, note, W - 180);
+      if (lines.length > 8) { lines = lines.slice(0, 8); lines[7] = lines[7].replace(/s+S*$/, "") + "…"; }
+      for (const l of lines) { x.fillText(l, W / 2, y); y += lh; }
+      y += 14;
     }
     x.fillStyle = accent; x.font = "600 26px Karla, sans-serif"; x.letterSpacing = "4px";
     x.fillText(lastResult && lastResult.won ? `SOLVED · SCORE ${lastResult.score}` : "CAN YOU READ IT?", W / 2, Math.min(y + 10, H - 90)); x.letterSpacing = "0px";
