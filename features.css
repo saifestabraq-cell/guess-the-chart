@@ -54,3 +54,5 @@
 @media (max-width:420px){.signGrid{grid-template-columns:repeat(4,1fr)}}
 
 #howBtn{margin-right:auto}
+.achList li.new{background:var(--glow)}
+.achList li.new b::after{content:"  New";font:600 10px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}

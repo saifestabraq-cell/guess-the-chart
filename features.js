@@ -57,6 +57,7 @@
     if (saved) restore(saved);
     clearRevealExtras();
     updateRoddenHelp();
+    const yp = $("#youPanel"); if (yp) yp.open = false;
     saveRound();
     if (tutorialPending() && meta.tutorial) setTimeout(() => startTutorial(false), 0);
   };
@@ -101,7 +102,8 @@
     saveProfile();
     if (meta.tutorial) store.set(TKEY, 1);
     showRevealExtras({ won, q, g, h, pos, score, fresh });
-    renderYou();
+    renderYou(fresh);
+    const yp = $("#youPanel"); if (yp) yp.open = true; // show stats with the result
   };
 
   function unlock({ q, score }) {
@@ -160,7 +162,7 @@
     d.append(youBody);
     $(".foot").after(d);
   }
-  function renderYou() {
+  function renderYou(fresh = []) {
     if (!youBody) return;
     youBody.innerHTML = "";
     if (!profile.games) { youBody.append(el("p", { class: "youEmpty" }, "Finish a round to start your stats.")); }
@@ -188,7 +190,7 @@
     }
     const al = el("ul", { class: "achList" });
     for (const a of ACH) {
-      const li = el("li", { class: profile.ach[a.id] ? "got" : "" });
+      const li = el("li", { class: (profile.ach[a.id] ? "got" : "") + (fresh.includes(a.id) ? " new" : "") });
       li.append(el("b", {}, a.name), el("span", {}, a.desc));
       al.append(li);
     }
